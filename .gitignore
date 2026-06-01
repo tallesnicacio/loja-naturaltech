@@ -7,3 +7,6 @@ data/backups/
 *.log
 .DS_Store
 .claude/
+
+# fotos de brinde de exemplo (gerenciadas pelo Admin via upload; nao versionar)
+public/img/TRUE-*
