@@ -1,0 +1,19 @@
+{
+  "name": "loja-naturaltech",
+  "version": "1.0.0",
+  "description": "PDV offline para a feira Natural Tech - True Source. Servidor local + SQLite, acessado por tablets na rede local.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node src/seed.js",
+    "seed:reset-estoque": "node src/seed.js --reset-estoque",
+    "backup": "node scripts/backup.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#481216"/>
+  <rect x="40" y="40" width="432" height="14" rx="7" fill="#FB6E13"/>
+  <text x="256" y="320" font-family="Georgia, 'Times New Roman', serif" font-size="300" font-weight="700"
+        fill="#FB6E13" text-anchor="middle">T</text>
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="58" font-weight="700"
+        fill="#F5EFEB" text-anchor="middle" letter-spacing="4">TRUE</text>
+</svg>

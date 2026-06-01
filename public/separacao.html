@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#FB6E13">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon.svg">
+  <title>Separação · Natural Tech</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="sep">
+  <div class="topbar">
+    <div class="brand">TRUE<small id="event-name">Separação · Natural Tech</small></div>
+    <div class="spacer"></div>
+    <label class="conf">Conferente: <input id="conferente" placeholder="seu nome"></label>
+    <input id="busca" class="sep-busca" placeholder="🔎 pedido ou cliente" autocomplete="off">
+    <button class="linkbtn som" id="som" title="Alerta sonoro de novo pedido">🔔</button>
+    <span class="auto" id="auto">atualizando…</span>
+    <a class="linkbtn" href="/">Loja</a>
+    <a class="linkbtn" href="/pdv">PDV</a>
+    <a class="linkbtn" href="/admin">Admin</a>
+  </div>
+
+  <div id="alerta" class="alerta hidden"></div>
+
+  <div class="kanban" id="kanban">
+    <section class="col" data-fase="novo">
+      <div class="col-head novo"><span>Novo Pedido</span><span class="cnt" id="cnt-novo">0</span></div>
+      <div class="col-body" id="col-novo"></div>
+    </section>
+    <section class="col" data-fase="separacao">
+      <div class="col-head separacao"><span>Em Separação</span><span class="cnt" id="cnt-separacao">0</span></div>
+      <div class="col-body" id="col-separacao"></div>
+    </section>
+    <section class="col" data-fase="entregue">
+      <div class="col-head entregue"><span>Entregue</span><span class="cnt" id="cnt-entregue">0</span></div>
+      <div class="col-body" id="col-entregue"></div>
+    </section>
+    <section class="col" data-fase="cancelado">
+      <div class="col-head cancelado"><span>Cancelado</span><span class="cnt" id="cnt-cancelado">0</span></div>
+      <div class="col-body" id="col-cancelado"></div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/js/separacao.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#FB6E13">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon.svg">
+  <title>TRUE · Natural Tech</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="totem">
+
+  <!-- Setup do totem (uma vez por aparelho) -->
+  <div id="setup" class="setup hidden">
+    <img src="/icons/icon.svg" width="64" height="64" alt="" style="border-radius:16px">
+    <h1>Loja TRUE</h1>
+    <p>Identifique este totem para começar:</p>
+    <div class="field req"><label>Nome do totem / estande</label><input id="su-totem" placeholder="Ex.: Totem 1"></div>
+    <button class="btn laranja" id="su-ok">Abrir loja</button>
+  </div>
+
+  <!-- ===================== LOJA ===================== -->
+  <div id="loja" class="hidden">
+    <header class="totem-header">
+      <div class="th-brand">
+        <img src="/icons/icon.svg" width="44" height="44" alt="TRUE">
+        <div><b>TRUE</b><small id="event-name">Natural Tech</small></div>
+      </div>
+      <div class="th-tag">Saúde de verdade 💚</div>
+    </header>
+
+    <div class="hero">
+      <h1>Escolha seus produtos</h1>
+      <p>Monte seu pedido e chame um(a) promotor(a) para finalizar.</p>
+    </div>
+
+    <div class="filtros">
+      <div class="cat-pills" id="categorias"></div>
+      <input id="busca" class="search" placeholder="🔎 Buscar produto..." autocomplete="off">
+    </div>
+
+    <main class="vitrine" id="vitrine"></main>
+    <div style="height:96px"></div> <!-- espaço para a barra do carrinho -->
+
+    <!-- Barra fixa do carrinho -->
+    <button class="cart-bar hidden" id="cartbar">
+      <span class="cb-count" id="cb-count">0</span>
+      <span class="cb-label">Ver pedido</span>
+      <span class="cb-total" id="cb-total">R$ 0,00</span>
+    </button>
+
+    <footer class="totem-footer">
+      <a href="/pdv">PDV</a> · <a href="/separacao">Separação</a> · <a href="/admin">Admin</a>
+    </footer>
+  </div>
+
+  <!-- ===================== CARRINHO (drawer) ===================== -->
+  <div id="drawer" class="drawer-overlay hidden">
+    <div class="drawer">
+      <div class="drawer-head"><h2>Seu pedido</h2><button class="x" id="fechar-cart">✕</button></div>
+      <div id="cart-itens" class="cart"></div>
+      <div class="drawer-foot">
+        <div class="row grand"><span>TOTAL</span><span id="d-total">R$ 0,00</span></div>
+        <button class="btn ghost" id="continuar">Continuar comprando</button>
+        <button class="btn verde" id="ir-checkout">Finalizar pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CHECKOUT ===================== -->
+  <div id="checkout" class="co-overlay hidden">
+    <div class="co">
+      <button class="x co-x" id="co-fechar">✕</button>
+
+      <!-- Passo 1: dados do cliente -->
+      <section id="step-dados">
+        <h2>Seus dados</h2>
+        <p class="co-sub">Para sua nota fiscal e novidades da TRUE.</p>
+        <div class="field req"><label>CPF</label><input id="c-cpf" inputmode="numeric" placeholder="Só números"></div>
+        <div class="field req"><label>Nome completo</label><input id="c-nome" placeholder="Seu nome"></div>
+        <div class="field"><label>E-mail</label><input id="c-email" type="email" inputmode="email" placeholder="seu@email.com"></div>
+        <div class="field"><label>Telefone / WhatsApp</label><input id="c-tel" inputmode="tel" placeholder="(00) 00000-0000"></div>
+        <div class="btn-row">
+          <button class="btn ghost" id="d-voltar">Voltar</button>
+          <button class="btn laranja" id="ir-pagamento" disabled>Continuar</button>
+        </div>
+      </section>
+
+      <!-- Passo 2: pagamento (promotor) -->
+      <section id="step-pagamento" class="hidden">
+        <div class="promo-badge">Etapa do(a) promotor(a)</div>
+        <h2>Pagamento</h2>
+        <div class="co-total">Total a cobrar<br><b id="p-total">R$ 0,00</b></div>
+        <div class="pagamentos" id="pagamentos">
+          <button class="pag" data-forma="credito">Crédito</button>
+          <button class="pag" data-forma="debito">Débito</button>
+          <button class="pag" data-forma="pix">Pix</button>
+          <button class="pag" data-forma="dinheiro">Dinheiro</button>
+        </div>
+        <div class="field" id="nsu-field"><label>NSU / Autorização (maquininha)</label><input id="c-nsu" placeholder="Código da maquininha"></div>
+        <div class="btn-row">
+          <button class="btn ghost" id="p-voltar">Voltar</button>
+          <button class="btn verde" id="confirmar" disabled>Confirmar pagamento</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ===================== SUCESSO ===================== -->
+  <div id="sucesso" class="ok-overlay hidden">
+    <div class="ok-card">
+      <div class="ok-check">✓</div>
+      <h2>Pedido concluído!</h2>
+      <div class="ok-num" id="ok-num">#0</div>
+      <p id="ok-total"></p>
+      <button class="btn laranja" id="ok-imprimir">Imprimir comprovante</button>
+      <button class="btn verde" id="ok-nova">Nova compra</button>
+      <p class="ok-auto" id="ok-auto"></p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/js/loja.js"></script><script src="/js/cliente-form.js"></script>
+</body>
+</html>

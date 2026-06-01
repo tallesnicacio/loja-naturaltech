@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FB6E13">
+  <title>Admin - Natural Tech</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Login -->
+  <div id="login" class="setup">
+    <h1>Admin</h1>
+    <p>Área restrita (estoque, vendas, exports).</p>
+    <div class="field req"><label>PIN</label><input id="pin" type="password" inputmode="numeric" placeholder="PIN de admin"></div>
+    <button class="btn laranja" id="entrar">Entrar</button>
+    <p style="margin-top:14px"><a class="linkbtn" href="/">← voltar ao PDV</a></p>
+  </div>
+
+  <div id="painel" class="hidden">
+    <div class="topbar">
+      <div class="brand">TRUE SOURCE<small>Admin · Natural Tech</small></div>
+      <div class="spacer"></div>
+      <button class="linkbtn" id="atualizar">atualizar</button>
+      <a class="linkbtn" href="/">Loja</a>
+      <a class="linkbtn" href="/pdv">PDV</a> <a class="linkbtn" href="/separacao">Separação</a>
+    </div>
+
+    <div class="adm">
+      <div class="cards-kpi" id="kpis"></div>
+
+      <div class="btn-row" style="margin-bottom:16px">
+        <button class="btn ghost" id="exp-sankhya">Exportar vendas (Sankhya)</button>
+        <button class="btn ghost" id="exp-clientes">Exportar clientes (CRM)</button>
+      </div>
+
+      <h2>Estoque</h2>
+      <table class="tbl" id="tbl-estoque"></table>
+
+      <h2 style="margin-top:24px">Vendas por produto</h2>
+      <table class="tbl" id="tbl-produtos"></table>
+
+      <h2 style="margin-top:24px">Vendas por vendedor</h2>
+      <table class="tbl" id="tbl-vendedores"></table>
+
+      <h2 style="margin-top:24px">Pedidos recentes</h2>
+      <table class="tbl" id="tbl-pedidos"></table>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

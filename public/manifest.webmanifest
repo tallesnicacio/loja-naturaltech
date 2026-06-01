@@ -1,0 +1,13 @@
+{
+  "name": "PDV Natural Tech - True Source",
+  "short_name": "PDV True",
+  "description": "Ponto de venda offline para a feira Natural Tech",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#F5EFEB",
+  "theme_color": "#FB6E13",
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
