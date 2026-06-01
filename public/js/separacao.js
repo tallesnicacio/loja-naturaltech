@@ -70,18 +70,40 @@ function unlock() {
   } catch { /* sem audio */ }
 }
 ['pointerdown', 'keydown', 'touchstart'].forEach((ev) => document.addEventListener(ev, unlock));
-function tom(freq, t0, dur) {
+function tom(freq, t0, dur, type = 'sine', volume = 0.28) {
   const o = actx.createOscillator(), g = actx.createGain();
   o.connect(g); g.connect(actx.destination);
-  o.type = 'sine'; o.frequency.value = freq;
+  o.type = type; o.frequency.value = freq;
   g.gain.setValueAtTime(0.0001, t0);
-  g.gain.exponentialRampToValueAtTime(0.35, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(volume, t0 + 0.015);
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
   o.start(t0); o.stop(t0 + dur + 0.02);
 }
+function ruido(t0, dur, volume = 0.18) {
+  const frames = Math.max(1, Math.floor(actx.sampleRate * dur));
+  const buffer = actx.createBuffer(1, frames, actx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < frames; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / frames);
+  const src = actx.createBufferSource(), filter = actx.createBiquadFilter(), g = actx.createGain();
+  src.buffer = buffer;
+  filter.type = 'highpass'; filter.frequency.value = 1200;
+  src.connect(filter); filter.connect(g); g.connect(actx.destination);
+  g.gain.setValueAtTime(volume, t0);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  src.start(t0); src.stop(t0 + dur);
+}
 function beep() {
   if (!state.som) return;
-  try { unlock(); if (!actx) return; const n = actx.currentTime; tom(880, n, 0.18); tom(1175, n + 0.2, 0.3); } catch { /* ok */ }
+  try {
+    unlock(); if (!actx) return;
+    const n = actx.currentTime;
+    ruido(n, 0.08, 0.2);
+    tom(220, n, 0.07, 'square', 0.12);
+    tom(932, n + 0.11, 0.28, 'triangle', 0.24);
+    tom(1864, n + 0.11, 0.22, 'sine', 0.1);
+    tom(1244, n + 0.38, 0.42, 'triangle', 0.3);
+    tom(2488, n + 0.38, 0.28, 'sine', 0.12);
+  } catch { /* ok */ }
 }
 
 // ---------- alerta visual ----------
