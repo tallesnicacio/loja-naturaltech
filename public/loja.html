@@ -30,11 +30,6 @@
       <div class="th-tag">Naturaltech 2026 🧡</div>
     </header>
 
-    <div class="hero">
-      <h1>Escolha seus produtos</h1>
-      <p>Monte seu pedido e chame um(a) promotor(a) para finalizar.</p>
-    </div>
-
     <div id="brinde-banner" class="brinde-banner hidden"></div>
 
     <div class="loja-grid">
@@ -47,7 +42,7 @@
       </section>
 
       <aside class="cart-panel" id="cart-panel">
-        <h2 class="cart-title">Seu pedido</h2>
+        <h2 class="cart-title">Seu pedido<button class="cart-sheet-close" id="fechar-cart" aria-label="Fechar">✕</button></h2>
         <div id="cart-itens" class="cart"></div>
         <div class="cart-foot">
           <div id="cart-brinde" class="cart-brinde hidden"></div>
@@ -60,6 +55,14 @@
     <footer class="totem-footer">
       <a href="/separacao">Separação</a> · <a href="/admin">Admin</a>
     </footer>
+
+    <!-- Mobile: fundo da folha + barra flutuante do carrinho -->
+    <div id="cart-backdrop" class="cart-backdrop hidden"></div>
+    <button id="cart-fab" class="cart-fab hidden">
+      <span class="cf-count" id="cf-count">0</span>
+      <span class="cf-label">Ver pedido</span>
+      <span class="cf-total" id="cf-total">R$ 0,00</span>
+    </button>
   </div>
 
   <!-- carrinho agora é um painel fixo (cart-panel) dentro de .loja-grid -->
@@ -108,7 +111,15 @@
   <!-- ===================== SUCESSO ===================== -->
   <div id="sucesso" class="ok-overlay hidden">
     <div class="ok-card">
-      <div class="ok-check">✓</div>
+      <div class="ok-motion" aria-hidden="true">
+        <img class="tmotion-logo" src="/icons/logo.png" alt="">
+        <svg class="tmotion" viewBox="0 0 120 120" role="img">
+          <circle class="tmotion-ring" cx="60" cy="60" r="47"></circle>
+          <path class="tmotion-speed speed-a" d="M10 75h24"></path>
+          <path class="tmotion-speed speed-b" d="M17 87h18"></path>
+          <path class="tmotion-check" d="M35 62l17 17 34-40"></path>
+        </svg>
+      </div>
       <h2>Pedido concluído!</h2>
       <div class="ok-num" id="ok-num">#0</div>
       <p id="ok-total"></p>

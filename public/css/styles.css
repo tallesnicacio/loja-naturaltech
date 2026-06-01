@@ -277,11 +277,80 @@ body.totem { background: var(--laranja-light); }
 .ok-overlay { position: fixed; inset: 0; background: rgba(47,133,77,.96); z-index: 50; display: flex;
   align-items: center; justify-content: center; padding: 16px; }
 .ok-card { background: #fff; border-radius: var(--radius-md); padding: 32px; text-align: center; max-width: 460px; width: 100%; }
-.ok-check { width: 84px; height: 84px; border-radius: 50%; background: var(--verde); color: #fff; font-size: 48px;
-  display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.ok-motion { width: 112px; height: 112px; margin: 0 auto 12px; position: relative; }
+.tmotion { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tmotion-logo {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  z-index: 1;
+  animation: tmotion-logo 2s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.tmotion-ring,
+.tmotion-speed,
+.tmotion-check {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tmotion-ring {
+  stroke: var(--laranja);
+  stroke-width: 8;
+  stroke-dasharray: 296;
+  stroke-dashoffset: 296;
+  animation: tmotion-ring 2s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.tmotion-speed {
+  stroke: var(--marrom);
+  stroke-width: 5;
+  opacity: 0;
+  animation: tmotion-speed 2s ease forwards;
+}
+.speed-b { animation-delay: .06s; }
+.tmotion-check {
+  stroke: var(--verde);
+  stroke-width: 11;
+  stroke-dasharray: 82;
+  stroke-dashoffset: 82;
+  animation: tmotion-check .68s cubic-bezier(.2,.8,.2,1) 1.38s forwards;
+}
 .ok-num { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 44px; color: var(--verde); margin: 6px 0; }
 .ok-card .btn { margin-top: 10px; }
 .ok-auto { color: var(--grey); font-size: 12px; margin-top: 14px; }
+
+@keyframes tmotion-logo {
+  0% { transform: translateX(-26px) rotate(0deg) scale(.88); opacity: 0; }
+  14% { opacity: 1; }
+  54% { transform: translateX(0) rotate(0deg) scale(1); opacity: 1; }
+  82% { transform: translateX(0) rotate(360deg) scale(1); opacity: 1; }
+  100% { transform: translateX(0) rotate(360deg) scale(.72); opacity: 0; }
+}
+@keyframes tmotion-ring {
+  0%, 42% { stroke-dashoffset: 296; opacity: 0; transform: scale(.86); transform-origin: 60px 60px; }
+  68% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; transform: scale(1); transform-origin: 60px 60px; }
+}
+@keyframes tmotion-check {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes tmotion-speed {
+  0% { opacity: 0; transform: translateX(-10px); }
+  16%, 45% { opacity: .8; transform: translateX(0); }
+  62%, 100% { opacity: 0; transform: translateX(14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tmotion-logo,
+  .tmotion-ring,
+  .tmotion-speed,
+  .tmotion-check {
+    animation-duration: .01ms;
+    animation-delay: 0s;
+  }
+}
 
 @media (max-width: 560px) {
   .hero h1 { font-size: 24px; }
@@ -355,7 +424,6 @@ body.sep { background: var(--laranja-light); }
 .cart-bar { background: var(--laranja); box-shadow: 0 8px 24px rgba(251,110,19,.45); }
 .cart-bar .cb-count { color: var(--laranja); }
 .ok-overlay { background: rgba(251,110,19,.96); }
-.ok-check { background: var(--laranja); }
 .ok-num { color: var(--laranja); }
 .modal .num { color: var(--laranja); }
 .pag.sel { border-color: var(--laranja); background: #fff5ef; color: var(--marrom); }
@@ -455,3 +523,29 @@ body.totem { background: #fff; }
 /* Banner estatico (imagem) ocupa a faixa inteira, sem o fundo laranja do dinamico */
 .brinde-banner.tem-img { display: block; background: none; padding: 0; }
 .brinde-banner img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
+
+/* ===== Mobile: carrinho vira folha deslizante + barra flutuante ===== */
+.cart-fab { display: none; }
+.cart-sheet-close { display: none; background: none; border: none; color: var(--marrom); font-size: 20px; float: right; line-height: 1; cursor: pointer; }
+@media (max-width: 900px) {
+  .loja-main { padding-bottom: 92px; }            /* espaço pra barra flutuante */
+  .cart-panel {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; margin: 0;
+    max-height: 82vh; border-radius: var(--radius-md) var(--radius-md) 0 0;
+    transform: translateY(110%); transition: transform .25s ease; z-index: 45;
+    box-shadow: 0 -8px 30px rgba(72, 18, 22, .18);
+  }
+  .cart-panel.aberto { transform: translateY(0); }
+  .cart-sheet-close { display: inline-block; }
+  .cart-backdrop { position: fixed; inset: 0; background: rgba(72, 18, 22, .45); z-index: 44; }
+  .cart-backdrop.hidden { display: none; }
+  .cart-fab {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 43;
+    background: var(--laranja); color: #fff; border: none; border-radius: var(--radius-full);
+    padding: 14px 22px; font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 16px;
+    box-shadow: 0 8px 24px rgba(251, 110, 19, .4);
+  }
+  .cart-fab.hidden { display: none; }
+  .cart-fab .cf-count { background: #fff; color: var(--laranja); border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; }
+}

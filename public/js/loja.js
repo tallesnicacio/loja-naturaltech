@@ -192,7 +192,21 @@ function renderCart() {
   $('#d-total').textContent = brl(totalCart().c);
   $('#ir-checkout').disabled = state.cart.size === 0;
   renderBrindeCarrinho();
+  // barra flutuante do mobile
+  const fab = $('#cart-fab');
+  if (fab) {
+    const { n, c } = totalCart();
+    if (n > 0) { fab.classList.remove('hidden'); $('#cf-count').textContent = n; $('#cf-total').textContent = brl(c); }
+    else { fab.classList.add('hidden'); fecharSheet(); }
+  }
 }
+
+// ---------- carrinho como folha deslizante (mobile) ----------
+function abrirSheet() { $('#cart-panel').classList.add('aberto'); $('#cart-backdrop').classList.remove('hidden'); }
+function fecharSheet() { const p = $('#cart-panel'); if (p) p.classList.remove('aberto'); const b = $('#cart-backdrop'); if (b) b.classList.add('hidden'); }
+$('#cart-fab').addEventListener('click', abrirSheet);
+$('#cart-backdrop').addEventListener('click', fecharSheet);
+$('#fechar-cart').addEventListener('click', fecharSheet);
 
 // ---------------- brindes por faixa de ticket ----------------
 function brindesAtivos() {
@@ -238,6 +252,7 @@ function renderCoBrinde() {
 // ---------------- checkout ----------------
 $('#ir-checkout').addEventListener('click', () => {
   if (state.cart.size === 0) return toast('Adicione produtos primeiro', 'erro');
+  fecharSheet();
   abrirCheckout();
 });
 function abrirCheckout() {
