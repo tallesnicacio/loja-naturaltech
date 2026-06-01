@@ -1,4 +1,13 @@
-/* Design tokens True Source (subset para PDV de evento) */
+/* ===== Fontes da marca TRUE (self-host, funcionam offline) =====
+   ABC Solar é proprietária; o guia da TRUE usa Figtree como substituta oficial.
+   Figtree = títulos/corpo/CTAs · Inter = micro-textos (badges, disclaimers). */
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/figtree-400.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/figtree-700.woff2") format("woff2"); }
+@font-face { font-family: "Figtree"; font-style: normal; font-weight: 800; font-display: swap; src: url("/fonts/figtree-800.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter-400.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter-700.woff2") format("woff2"); }
+
+/* Design tokens TRUE (subset para PDV de evento) */
 :root {
   --marrom: #481216;
   --laranja: #FB6E13;
@@ -70,7 +79,7 @@ button { font-family: inherit; cursor: pointer; }
 .card:active { transform: scale(0.98); }
 .card[disabled] { opacity: .45; }
 .card .nome { font-weight: 700; font-size: 13px; line-height: 1.25; }
-.card .preco { font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 18px; }
+.card .preco { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 18px; }
 .card .est { font-size: 11px; color: var(--grey); margin-top: auto; }
 .card .est.baixo { color: var(--laranja); font-weight: 700; }
 .card .est.zero { color: var(--vermelho); font-weight: 700; }
@@ -91,7 +100,7 @@ button { font-family: inherit; cursor: pointer; }
 
 .totais { margin-top: 8px; }
 .totais .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 14px; }
-.totais .grand { font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 24px; border-top: 2px solid var(--marrom); padding-top: 10px; margin-top: 6px; }
+.totais .grand { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 24px; border-top: 2px solid var(--marrom); padding-top: 10px; margin-top: 6px; }
 
 /* Form cliente / pagamento */
 .field { margin-bottom: 10px; }
@@ -111,7 +120,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Botoes */
 .btn { width: 100%; padding: 18px; border: none; border-radius: var(--radius-full);
-  font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 18px; color: var(--branco); }
+  font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 18px; color: var(--branco); }
 .btn.verde { background: var(--verde); }
 .btn.laranja { background: var(--laranja); }
 .btn.ghost { background: var(--branco); color: var(--marrom); border: 1px solid var(--stroke-marrom); }
@@ -130,7 +139,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: center; z-index: 40; padding: 16px; }
 .modal { background: #fff; border-radius: var(--radius-md); padding: 24px; max-width: 480px; width: 100%; text-align: center; }
 .modal h2 { margin-top: 0; }
-.modal .num { font-family: "ABC Solar", sans-serif; font-size: 40px; color: var(--verde); margin: 8px 0; }
+.modal .num { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 40px; color: var(--verde); margin: 8px 0; }
 
 /* Setup inicial */
 .setup { max-width: 420px; margin: 60px auto; background: #fff; padding: 28px; border-radius: var(--radius-md); }
@@ -198,7 +207,7 @@ body.totem { background: var(--laranja-light); }
 }
 .prod .foto img { width: 100%; height: 100%; object-fit: contain; }
 .prod .foto .ph {
-  font-family: "ABC Solar", sans-serif; font-weight: 700; color: var(--marrom);
+  font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; color: var(--marrom);
   text-align: center; padding: 14px; font-size: 14px; line-height: 1.25; opacity: .8;
   text-transform: uppercase; letter-spacing: .02em;
 }
@@ -208,13 +217,13 @@ body.totem { background: var(--laranja-light); }
 }
 .prod .info { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .prod .nome { font-weight: 700; font-size: 15px; line-height: 1.3; min-height: 2.6em; }
-.prod .preco { font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 22px; margin-top: auto; }
+.prod .preco { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 22px; margin-top: auto; }
 .preco .preco-de { font-family: "Figtree", sans-serif; font-weight: 400; font-size: 0.6em; color: var(--grey); text-decoration: line-through; margin-right: 6px; vertical-align: middle; }
 .preco .preco-por { color: var(--verde); }
 .prod .est-min { font-size: 12px; color: var(--laranja); font-weight: 700; }
 .prod .add {
   width: 100%; padding: 14px; border: none; border-radius: var(--radius-full);
-  background: var(--laranja); color: #fff; font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 15px;
+  background: var(--laranja); color: #fff; font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 15px;
 }
 .prod .stepper {
   display: grid; grid-template-columns: 48px 1fr 48px; align-items: center; gap: 4px;
@@ -235,8 +244,8 @@ body.totem { background: var(--laranja-light); }
 }
 .cart-bar .cb-count { background: #fff; color: var(--verde); border-radius: 50%; width: 30px; height: 30px;
   display: inline-flex; align-items: center; justify-content: center; font-size: 15px; }
-.cart-bar .cb-label { font-family: "ABC Solar", sans-serif; }
-.cart-bar .cb-total { font-family: "ABC Solar", sans-serif; font-size: 19px; }
+.cart-bar .cb-label { font-family: "ABC Solar", "Figtree", sans-serif; }
+.cart-bar .cb-total { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 19px; }
 
 .totem-footer { text-align: center; padding: 18px; color: var(--grey); font-size: 11px; }
 .totem-footer a { color: var(--grey); text-decoration: none; }
@@ -260,7 +269,7 @@ body.totem { background: var(--laranja-light); }
 .co h2 { margin: 0 0 4px; text-transform: uppercase; }
 .co-sub { color: var(--grey); margin: 0 0 16px; font-size: 14px; }
 .co-total { text-align: center; background: var(--laranja-light); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 16px; color: var(--dark); }
-.co-total b { font-family: "ABC Solar", sans-serif; font-size: 30px; color: var(--marrom); }
+.co-total b { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 30px; color: var(--marrom); }
 .promo-badge { display: inline-block; background: var(--verde); color: #fff; font-size: 12px; font-weight: 700;
   padding: 5px 12px; border-radius: var(--radius-pill); margin-bottom: 10px; }
 
@@ -270,7 +279,7 @@ body.totem { background: var(--laranja-light); }
 .ok-card { background: #fff; border-radius: var(--radius-md); padding: 32px; text-align: center; max-width: 460px; width: 100%; }
 .ok-check { width: 84px; height: 84px; border-radius: 50%; background: var(--verde); color: #fff; font-size: 48px;
   display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-.ok-num { font-family: "ABC Solar", sans-serif; font-size: 44px; color: var(--verde); margin: 6px 0; }
+.ok-num { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 44px; color: var(--verde); margin: 6px 0; }
 .ok-card .btn { margin-top: 10px; }
 .ok-auto { color: var(--grey); font-size: 12px; margin-top: 14px; }
 
@@ -294,7 +303,7 @@ body.sep { background: var(--laranja-light); }
 .kanban { display: flex; gap: 14px; padding: 14px; height: calc(100dvh - 66px); overflow-x: auto; align-items: stretch; }
 .col { flex: 1 1 0; min-width: 290px; background: #fff; border-radius: var(--radius-md); display: flex; flex-direction: column; overflow: hidden; }
 .col-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;
-  font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; color: #fff; }
+  font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 15px; text-transform: uppercase; color: #fff; }
 .col-head.novo { background: var(--laranja); color: var(--marrom); }
 .col-head.separacao { background: var(--amarelo, #EDBD2A); color: var(--marrom); }
 .col-head.entregue { background: var(--verde); }
@@ -307,14 +316,14 @@ body.sep { background: var(--laranja-light); }
 .ped { border: 1px solid var(--stroke-marrom); border-radius: var(--radius-sm); padding: 12px; background: #fff;
   box-shadow: 0 1px 4px rgba(72,18,22,.06); }
 .ped-top { display: flex; justify-content: space-between; align-items: baseline; }
-.ped-id { font-family: "ABC Solar", sans-serif; font-weight: 700; font-size: 18px; }
+.ped-id { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 18px; }
 .ped-hora { font-size: 12px; color: var(--grey); }
 .ped-cli { font-weight: 700; font-size: 15px; margin-top: 2px; }
 .ped-vend { font-size: 12px; color: var(--grey); margin-bottom: 6px; }
 .ped-itens { list-style: none; margin: 6px 0; padding: 8px 10px; background: var(--laranja-light); border-radius: var(--radius-sm); font-size: 14px; }
 .ped-itens li { padding: 2px 0; }
 .ped-foot { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--dark); margin-top: 4px; }
-.ped-foot b { font-family: "ABC Solar", sans-serif; font-size: 16px; color: var(--marrom); }
+.ped-foot b { font-family: "ABC Solar", "Figtree", sans-serif; font-size: 16px; color: var(--marrom); }
 .ped-conf { font-size: 11px; color: var(--verde); margin-top: 4px; }
 .ped-acts { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; }
 .btn.mini { width: auto; padding: 10px 14px; font-size: 14px; border-radius: var(--radius-full); }
@@ -324,7 +333,7 @@ body.sep { background: var(--laranja-light); }
 .topbar .som { font-size: 20px; padding: 4px 8px; }
 .alerta {
   position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 60;
-  background: var(--laranja); color: var(--marrom); font-family: "ABC Solar", sans-serif; font-weight: 700;
+  background: var(--laranja); color: var(--marrom); font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700;
   padding: 14px 28px; border-radius: var(--radius-full); box-shadow: 0 8px 24px rgba(251,110,19,.5);
   font-size: 18px; animation: alerta-in .25s ease;
 }

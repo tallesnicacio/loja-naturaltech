@@ -4,7 +4,7 @@
 import net from 'node:net';
 
 const COLS = Number(process.env.PRINTER_COLS || 48);
-const STORE_NAME = process.env.STORE_NAME || 'True Source';
+const STORE_NAME = process.env.STORE_NAME || 'TRUE';
 const STORE_CNPJ = process.env.STORE_CNPJ || '';
 const EVENT_NAME = process.env.EVENT_NAME || 'Natural Tech';
 
@@ -67,7 +67,7 @@ export function gerarReciboHTML(pedido, itens, cliente) {
   ${pedido.pagamento_nsu ? `<div class="row small"><span>NSU/Aut.</span><span>${escapeHtml(pedido.pagamento_nsu)}</span></div>` : ''}
   <div class="hr"></div>
   <div class="center small">Documento NAO fiscal.<br>Nota fiscal sera emitida posteriormente.</div>
-  <div class="center small">Obrigado pela compra! 💚</div>
+  <div class="center small">Obrigado pela compra! 🧡</div>
   <button class="btn" onclick="window.print()">Imprimir</button>
 </body></html>`;
 }

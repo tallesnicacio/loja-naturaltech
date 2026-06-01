@@ -1,4 +1,4 @@
-# PDV Natural Tech — True Source
+# PDV Natural Tech — TRUE
 
 Ponto de venda **offline** para a feira Natural Tech. Um notebook roda o servidor + banco
 (SQLite); os tablets dos promotores acessam pelo navegador numa **rede local sem internet**.

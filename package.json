@@ -1,7 +1,7 @@
 {
   "name": "loja-naturaltech",
   "version": "1.0.0",
-  "description": "PDV offline para a feira Natural Tech - True Source. Servidor local + SQLite, acessado por tablets na rede local.",
+  "description": "PDV offline para a feira Natural Tech - TRUE. Servidor local + SQLite, acessado por tablets na rede local.",
   "type": "module",
   "scripts": {
     "start": "node server.js",
