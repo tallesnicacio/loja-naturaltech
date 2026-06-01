@@ -17,7 +17,7 @@ const EVENT_NAME = process.env.EVENT_NAME || 'Natural Tech - TRUE';
 const RECEIPT_MODE = process.env.RECEIPT_MODE || 'browser';
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '6mb' })); // 6mb: fotos de brinde vao como data URL
 app.use(express.static(join(__dirname, 'public')));
 
 // ---------- helpers ----------
@@ -61,9 +61,9 @@ const stmtDevolverEstoque = db.prepare(
   'UPDATE produtos SET estoque = estoque + @qtd, updated_at=datetime(\'now\',\'localtime\') WHERE id=@id');
 const stmtInserirPedido = db.prepare(`
   INSERT INTO pedidos (cliente_id, cliente_nome, cliente_cpf, operador, device, subtotal_centavos, desconto_centavos,
-    total_centavos, forma_pagamento, pagamento_nsu, pagamento_bandeira, observacao)
+    total_centavos, forma_pagamento, pagamento_nsu, pagamento_bandeira, brinde_id, brinde_nome, observacao)
   VALUES (@cliente_id, @cliente_nome, @cliente_cpf, @operador, @device, @subtotal_centavos, @desconto_centavos,
-    @total_centavos, @forma_pagamento, @pagamento_nsu, @pagamento_bandeira, @observacao)`);
+    @total_centavos, @forma_pagamento, @pagamento_nsu, @pagamento_bandeira, @brinde_id, @brinde_nome, @observacao)`);
 const stmtInserirItem = db.prepare(`
   INSERT INTO pedido_itens (pedido_id, produto_id, sku, nome, preco_unit_centavos, qtd, total_centavos)
   VALUES (@pedido_id, @produto_id, @sku, @nome, @preco_unit_centavos, @qtd, @total_centavos)`);
@@ -73,6 +73,9 @@ const stmtMov = db.prepare(`
 const stmtPedido = db.prepare('SELECT * FROM pedidos WHERE id = ?');
 const stmtItensPedido = db.prepare('SELECT * FROM pedido_itens WHERE pedido_id = ? ORDER BY id');
 const stmtCliente = db.prepare('SELECT * FROM clientes WHERE id = ?');
+// Brinde por faixa de ticket: a MAIOR faixa ativa que o total atingir (nao acumula).
+const stmtBrindeParaTotal = db.prepare(
+  'SELECT * FROM brindes WHERE ativo=1 AND min_centavos <= ? AND (max_centavos IS NULL OR max_centavos >= ?) ORDER BY min_centavos DESC LIMIT 1');
 
 // ---------- transacao: criar pedido (atomico, a prova de venda dupla) ----------
 const criarPedidoTx = db.transaction((dados) => {
@@ -111,6 +114,7 @@ const criarPedidoTx = db.transaction((dados) => {
   const desconto = Math.max(0, Math.trunc(Number(dados.desconto_centavos || 0)));
   if (desconto > subtotal) throw new Error('Desconto maior que o subtotal.');
   const total = subtotal - desconto;
+  const brinde = stmtBrindeParaTotal.get(total, total); // brinde por faixa (nao acumula)
 
   // 3. cabecalho do pedido
   const pedidoId = stmtInserirPedido.run({
@@ -125,6 +129,8 @@ const criarPedidoTx = db.transaction((dados) => {
     forma_pagamento: dados.forma_pagamento,
     pagamento_nsu: dados.pagamento_nsu || null,
     pagamento_bandeira: dados.pagamento_bandeira || null,
+    brinde_id: brinde ? brinde.id : null,
+    brinde_nome: brinde ? brinde.nome : null,
     observacao: dados.observacao || null,
   }).lastInsertRowid;
 
@@ -184,6 +190,40 @@ app.get('/api/clientes/:cpf', (req, res) => {
     "SELECT COUNT(*) AS n, COALESCE(SUM(total_centavos),0) AS total FROM pedidos WHERE cliente_id=? AND status='pago'"
   ).get(c.id);
   res.json({ nome: c.nome, email: c.email, telefone: c.telefone, pedidos: agg.n, total_centavos: agg.total });
+});
+
+// ---------- Brindes por faixa de ticket ----------
+app.get('/api/brindes', (req, res) => {
+  res.json(db.prepare('SELECT * FROM brindes ORDER BY min_centavos').all());
+});
+function validarBrinde(b) {
+  const nome = (b.nome || '').trim();
+  const min = Math.trunc(Number(b.min_centavos));
+  const maxRaw = b.max_centavos;
+  const max = (maxRaw === null || maxRaw === undefined || maxRaw === '') ? null : Math.trunc(Number(maxRaw));
+  if (!nome) return { erro: 'Nome do brinde obrigatorio.' };
+  if (!Number.isFinite(min) || min < 0) return { erro: 'Valor minimo invalido.' };
+  if (max !== null && (!Number.isFinite(max) || max < min)) return { erro: 'Valor maximo deve ser >= minimo (ou vazio = sem limite).' };
+  return { nome, min, max, imagem: b.imagem || null, ativo: (b.ativo === 0 || b.ativo === false) ? 0 : 1 };
+}
+app.post('/api/brindes', exigirAdmin, (req, res) => {
+  const v = validarBrinde(req.body || {});
+  if (v.erro) return res.status(400).json({ erro: v.erro });
+  const r = db.prepare('INSERT INTO brindes (nome, min_centavos, max_centavos, imagem, ativo) VALUES (?, ?, ?, ?, ?)')
+    .run(v.nome, v.min, v.max, v.imagem, v.ativo);
+  res.status(201).json({ ok: true, id: r.lastInsertRowid });
+});
+app.post('/api/brindes/:id', exigirAdmin, (req, res) => {
+  const v = validarBrinde(req.body || {});
+  if (v.erro) return res.status(400).json({ erro: v.erro });
+  const r = db.prepare("UPDATE brindes SET nome=?, min_centavos=?, max_centavos=?, imagem=?, ativo=?, updated_at=datetime('now','localtime') WHERE id=?")
+    .run(v.nome, v.min, v.max, v.imagem, v.ativo, req.params.id);
+  if (r.changes === 0) return res.status(404).json({ erro: 'Brinde nao encontrado.' });
+  res.json({ ok: true });
+});
+app.post('/api/brindes/:id/excluir', exigirAdmin, (req, res) => {
+  db.prepare('DELETE FROM brindes WHERE id=?').run(req.params.id);
+  res.json({ ok: true });
 });
 
 app.get('/api/produtos', (req, res) => {
@@ -339,7 +379,7 @@ app.get('/api/separacao', (req, res) => {
   const pedidos = db.prepare(`
     SELECT p.id, p.created_at, p.operador, p.device, p.total_centavos,
            p.status, p.entrega_status, p.entrega_operador, p.entrega_updated_at,
-           p.cliente_nome
+           p.cliente_nome, p.brinde_nome
     FROM pedidos p
     ORDER BY p.id DESC LIMIT ?`).all(limit);
   const ids = pedidos.map((p) => p.id);
@@ -368,7 +408,6 @@ app.post('/api/pedidos/:id/entrega', (req, res) => {
 });
 
 app.get('/', (req, res) => res.sendFile(join(__dirname, 'public', 'loja.html')));               // totem/cliente
-app.get('/pdv', (req, res) => res.sendFile(join(__dirname, 'public', 'pdv.html')));             // operador
 app.get('/separacao', (req, res) => res.sendFile(join(__dirname, 'public', 'separacao.html'))); // fulfillment
 app.get('/admin', (req, res) => res.sendFile(join(__dirname, 'public', 'admin.html')));
 app.get('/health', (req, res) => res.json({ ok: true }));
@@ -408,7 +447,6 @@ app.listen(PORT, '0.0.0.0', () => {
       console.log(`    Loja:  http://${ip}:${PORT}        (interface ${nome})`);
     }
     const ip0 = ips[0].ip;
-    console.log(`    PDV:   http://${ip0}:${PORT}/pdv`);
     console.log(`    Separacao: http://${ip0}:${PORT}/separacao    Admin: http://${ip0}:${PORT}/admin`);
     console.log(`\n  Se nao abrir em outro aparelho: confira se estao na MESMA rede e se`);
     console.log(`  o Wi-Fi nao tem "isolamento de clientes" (use o roteador do evento).`);

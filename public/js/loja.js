@@ -34,9 +34,11 @@ async function iniciar() {
   $('#loja').classList.remove('hidden');
   try {
     const cfg = await fetch('/api/config').then((r) => r.json());
-    $('#event-name').textContent = cfg.eventName || 'Natural Tech';
+    const ev = $('#event-name'); if (ev) ev.textContent = cfg.eventName || 'Natural Tech';
     state.receiptMode = cfg.receiptMode || 'browser';
   } catch { /* segue */ }
+  try { state.brindes = await fetch('/api/brindes').then((r) => r.json()); } catch { state.brindes = []; }
+  renderBrindeBanner();
   await carregarProdutos();
   armarInatividade();
 }
@@ -45,21 +47,36 @@ async function iniciar() {
 async function carregarProdutos() {
   try {
     state.produtos = await fetch('/api/produtos').then((r) => r.json());
-    renderCategorias(); renderVitrine();
+    renderCategorias(); renderVitrine(); renderCart();
   } catch { toast('Sem conexão com o servidor', 'erro'); }
 }
 
+function imagemCategoria(cat) {
+  if (cat === 'Todos') return '/icons/logo.png';
+  const p = state.produtos.find((x) => x.categoria === cat && x.imagem);
+  return p ? `/img/${p.imagem}` : '/icons/logo.png';
+}
 function renderCategorias() {
   const cats = ['Todos', ...new Set(state.produtos.map((p) => p.categoria).filter(Boolean))];
   const cont = $('#categorias');
   cont.innerHTML = '';
   for (const c of cats) {
     const b = document.createElement('button');
-    b.className = 'pill' + (c === state.categoria ? ' sel' : '');
-    b.textContent = c;
+    b.className = 'cat' + (c === state.categoria ? ' sel' : '');
+    b.innerHTML = `<span class="cat-circ"><img src="${imagemCategoria(c)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'"></span><span class="cat-nome">${esc(c)}</span>`;
     b.addEventListener('click', () => { state.categoria = c; renderCategorias(); renderVitrine(); });
     cont.appendChild(b);
   }
+}
+// Banner que lembra os brindes (faixa larga, dinamica a partir dos brindes ativos).
+function renderBrindeBanner() {
+  const el = $('#brinde-banner'); if (!el) return;
+  const ativos = brindesAtivos();
+  if (!ativos.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  const itens = ativos.map((b) => `
+    <div class="bb-item">${brindeFotoHtml(b)}<div class="bb-txt"><span class="bb-min">a partir de ${brl(b.min_centavos)}</span><span class="bb-nome">${esc(b.nome)}</span></div></div>`).join('<span class="bb-sep">•</span>');
+  el.innerHTML = `<div class="bb-tag">🎁 Ganhe brindes</div><div class="bb-itens">${itens}</div>`;
 }
 
 function precoHtml(p) {
@@ -130,7 +147,7 @@ function mudar(p, delta) {
   if (nova <= 0) state.cart.delete(p.id);
   else if (nova > atual.estoque) { toast('Sem estoque suficiente', 'erro'); return; }
   else { item.qtd = nova; item.produto = atual; state.cart.set(p.id, item); }
-  renderVitrine(); renderCartBar(); if (!$('#drawer').classList.contains('hidden')) renderDrawer();
+  renderVitrine(); renderCart();
 }
 
 function totalCart() {
@@ -138,57 +155,97 @@ function totalCart() {
   for (const [, i] of state.cart) { n += i.qtd; c += i.produto.preco_centavos * i.qtd; }
   return { n, c };
 }
-function renderCartBar() {
-  const { n, c } = totalCart();
-  const bar = $('#cartbar');
-  if (n === 0) { bar.classList.add('hidden'); return; }
-  bar.classList.remove('hidden');
-  $('#cb-count').textContent = n;
-  $('#cb-total').textContent = brl(c);
-}
-function renderDrawer() {
+function renderCart() {
   const cont = $('#cart-itens');
+  if (!cont) return;
   if (state.cart.size === 0) {
-    cont.innerHTML = '<div class="cart-empty">Seu pedido está vazio</div>';
+    cont.innerHTML = '<div class="cart-empty">Seu carrinho está vazio.<br>Toque nos produtos para adicionar.</div>';
   } else {
     cont.innerHTML = '';
     for (const [id, item] of state.cart) {
+      const p = item.produto;
+      const foto = p.imagem
+        ? `<img class="ci-foto" src="/img/${esc(p.imagem)}" alt="" onerror="this.classList.add('ci-ph');this.removeAttribute('src')">`
+        : `<div class="ci-foto ci-ph"></div>`;
       const row = document.createElement('div');
       row.className = 'cart-item';
       row.innerHTML = `
-        <div>
-          <div class="nome">${esc(item.produto.nome)}</div>
-          <div class="preco-unit">${brl(item.produto.preco_centavos)} un.</div>
+        ${foto}
+        <div class="ci-info">
+          <div class="nome">${esc(p.nome)}</div>
+          <div class="preco-unit">${brl(p.preco_centavos)} un.</div>
           <div class="qty"><button data-a="menos">−</button><span>${item.qtd}</span><button data-a="mais">+</button></div>
         </div>
-        <div class="total">${brl(item.produto.preco_centavos * item.qtd)}</div>`;
-      row.querySelector('[data-a="menos"]').addEventListener('click', () => mudar(item.produto, -1));
-      row.querySelector('[data-a="mais"]').addEventListener('click', () => mudar(item.produto, +1));
+        <div class="ci-right">
+          <div class="total">${brl(p.preco_centavos * item.qtd)}</div>
+          <button class="rm" data-a="rm" title="Remover">🗑</button>
+        </div>`;
+      row.querySelector('[data-a="menos"]').addEventListener('click', () => mudar(p, -1));
+      row.querySelector('[data-a="mais"]').addEventListener('click', () => mudar(p, +1));
+      row.querySelector('[data-a="rm"]').addEventListener('click', () => { state.cart.delete(id); renderCart(); renderVitrine(); });
       cont.appendChild(row);
     }
   }
   $('#d-total').textContent = brl(totalCart().c);
+  $('#ir-checkout').disabled = state.cart.size === 0;
+  renderBrindeCarrinho();
 }
 
-$('#cartbar').addEventListener('click', () => { renderDrawer(); $('#drawer').classList.remove('hidden'); });
-$('#fechar-cart').addEventListener('click', () => $('#drawer').classList.add('hidden'));
-$('#continuar').addEventListener('click', () => $('#drawer').classList.add('hidden'));
-$('#drawer').addEventListener('click', (e) => { if (e.target.id === 'drawer') $('#drawer').classList.add('hidden'); });
+// ---------------- brindes por faixa de ticket ----------------
+function brindesAtivos() {
+  return (state.brindes || []).filter((b) => b.ativo).sort((a, b) => a.min_centavos - b.min_centavos);
+}
+function calcBrinde(total) {
+  let atual = null;
+  for (const b of brindesAtivos()) {
+    if (total >= b.min_centavos && (b.max_centavos == null || total <= b.max_centavos)) atual = b;
+  }
+  const proximo = brindesAtivos().find((b) => b.min_centavos > total);
+  return { atual, proximo };
+}
+function brindeFotoHtml(b) {
+  return b && b.imagem ? `<img class="brinde-foto" src="${b.imagem}" alt="">` : '<div class="brinde-foto brinde-ph">🎁</div>';
+}
+function brindePorNome(n) { return (state.brindes || []).find((b) => b.nome === n); }
+
+function renderBrindeCarrinho() {
+  const el = $('#cart-brinde');
+  if (!el) return;
+  const total = totalCart().c;
+  const { atual, proximo } = calcBrinde(total);
+  if (state.cart.size === 0 || (!atual && !proximo)) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  let html = '';
+  if (atual) html += `<div class="cb-ganhou">${brindeFotoHtml(atual)}<span>🎁 Você ganhou: <b>${esc(atual.nome)}</b></span></div>`;
+  if (proximo) html += `<div class="cb-falta">Faltam <b>${brl(proximo.min_centavos - total)}</b> para ganhar ${esc(proximo.nome)}</div>`;
+  el.innerHTML = html;
+}
+
+// Banner do brinde dentro do checkout
+function renderCoBrinde() {
+  const el = $('#co-brinde'); if (!el) return;
+  const { atual } = calcBrinde(totalCart().c);
+  if (!atual) { el.classList.add('hidden'); el.innerHTML = ''; return; }
+  el.classList.remove('hidden');
+  el.innerHTML = `${brindeFotoHtml(atual)}<div class="co-brinde-txt"><div class="bg-label">🎁 Você ganhou um brinde!</div><div class="bg-nome">${esc(atual.nome)}</div></div>`;
+}
+
+// carrinho agora é um painel fixo à direita (sem barra inferior / drawer)
 
 // ---------------- checkout ----------------
 $('#ir-checkout').addEventListener('click', () => {
   if (state.cart.size === 0) return toast('Adicione produtos primeiro', 'erro');
-  $('#drawer').classList.add('hidden');
   abrirCheckout();
 });
 function abrirCheckout() {
   $('#step-pagamento').classList.add('hidden');
   $('#step-dados').classList.remove('hidden');
+  renderCoBrinde();
   $('#checkout').classList.remove('hidden');
   validarDados();
 }
 $('#co-fechar').addEventListener('click', () => $('#checkout').classList.add('hidden'));
-$('#d-voltar').addEventListener('click', () => { $('#checkout').classList.add('hidden'); renderDrawer(); $('#drawer').classList.remove('hidden'); });
+$('#d-voltar').addEventListener('click', () => { $('#checkout').classList.add('hidden'); });
 
 function cpfValido(cpf) {
   const c = onlyDigits(cpf);
@@ -261,6 +318,13 @@ let autoTimer, autoCount;
 function mostrarSucesso(pedido) {
   $('#ok-num').textContent = '#' + pedido.id;
   $('#ok-total').textContent = 'Total: ' + brl(pedido.total_centavos);
+  const okb = $('#ok-brinde');
+  if (okb) {
+    if (pedido.brinde_nome) {
+      okb.innerHTML = `${brindeFotoHtml(brindePorNome(pedido.brinde_nome))}<span>🎁 Brinde: <b>${esc(pedido.brinde_nome)}</b></span>`;
+      okb.classList.remove('hidden');
+    } else { okb.classList.add('hidden'); }
+  }
   $('#sucesso').classList.remove('hidden');
   let s = 25;
   $('#ok-auto').textContent = `Nova compra automática em ${s}s`;
@@ -282,8 +346,8 @@ function novaCompra() {
   ['#c-cpf', '#c-nome', '#c-email', '#c-tel', '#c-nsu'].forEach((s) => ($(s).value = ''));
   $('#busca').value = '';
   document.querySelectorAll('.pag').forEach((x) => x.classList.remove('sel'));
-  $('#sucesso').classList.add('hidden'); $('#checkout').classList.add('hidden'); $('#drawer').classList.add('hidden');
-  renderCategorias(); renderVitrine(); renderCartBar();
+  $('#sucesso').classList.add('hidden'); $('#checkout').classList.add('hidden');
+  renderCategorias(); renderVitrine(); renderCart();
   window.scrollTo({ top: 0 });
 }
 
@@ -294,7 +358,7 @@ function armarInatividade() {
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       // só reseta se há algo em andamento (carrinho ou telas abertas)
-      const ativo = state.cart.size > 0 || !$('#checkout').classList.contains('hidden') || !$('#drawer').classList.contains('hidden');
+      const ativo = state.cart.size > 0 || !$('#checkout').classList.contains('hidden');
       if (ativo && $('#sucesso').classList.contains('hidden')) novaCompra();
     }, 120000); // 2 min
   };

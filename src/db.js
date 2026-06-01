@@ -63,6 +63,8 @@ db.exec(`
     entrega_status      TEXT NOT NULL DEFAULT 'novo',    -- novo | separacao | entregue
     entrega_operador    TEXT,
     entrega_updated_at  TEXT,
+    brinde_id           INTEGER,                         -- brinde por faixa de ticket
+    brinde_nome         TEXT,                            -- snapshot no momento da venda
     observacao          TEXT,
     created_at          TEXT NOT NULL DEFAULT (datetime('now','localtime'))
   );
@@ -90,6 +92,17 @@ db.exec(`
     created_at          TEXT NOT NULL DEFAULT (datetime('now','localtime'))
   );
 
+  -- Brindes por faixa de ticket. NAO acumulam: o pedido ganha 1 brinde (a maior faixa atingida).
+  CREATE TABLE IF NOT EXISTS brindes (
+    id            INTEGER PRIMARY KEY,
+    nome          TEXT NOT NULL,
+    min_centavos  INTEGER NOT NULL,
+    max_centavos  INTEGER,                  -- NULL = sem limite superior ("acima de")
+    imagem        TEXT,                     -- foto do brinde (data URL)
+    ativo         INTEGER NOT NULL DEFAULT 1,
+    updated_at    TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+  );
+
   CREATE INDEX IF NOT EXISTS idx_itens_pedido ON pedido_itens(pedido_id);
   CREATE INDEX IF NOT EXISTS idx_mov_produto ON movimentacoes_estoque(produto_id);
   CREATE INDEX IF NOT EXISTS idx_pedidos_status ON pedidos(status);
@@ -111,5 +124,17 @@ if (!colsPedido.includes('cliente_cpf')) db.exec('ALTER TABLE pedidos ADD COLUMN
 // Backfill do snapshot a partir da tabela clientes (pedidos antigos).
 db.exec("UPDATE pedidos SET cliente_nome = (SELECT nome FROM clientes WHERE clientes.id = pedidos.cliente_id) WHERE cliente_nome IS NULL AND cliente_id IS NOT NULL");
 db.exec("UPDATE pedidos SET cliente_cpf = (SELECT cpf FROM clientes WHERE clientes.id = pedidos.cliente_id) WHERE cliente_cpf IS NULL AND cliente_id IS NOT NULL");
+if (!colsPedido.includes('brinde_id')) db.exec('ALTER TABLE pedidos ADD COLUMN brinde_id INTEGER');
+if (!colsPedido.includes('brinde_nome')) db.exec('ALTER TABLE pedidos ADD COLUMN brinde_nome TEXT');
+const colsBrinde = db.prepare('PRAGMA table_info(brindes)').all().map((c) => c.name);
+if (!colsBrinde.includes('imagem')) db.exec('ALTER TABLE brindes ADD COLUMN imagem TEXT');
+
+// Brindes padrao (so se a tabela estiver vazia) — editaveis no /admin.
+if (db.prepare('SELECT COUNT(*) AS n FROM brindes').get().n === 0) {
+  const insBrinde = db.prepare('INSERT INTO brindes (nome, min_centavos, max_centavos) VALUES (?, ?, ?)');
+  insBrinde.run('Garrafa', 29900, 39800);   // R$ 299,00 a R$ 398,00
+  insBrinde.run('Camisa', 39900, 59800);    // R$ 399,00 a R$ 598,00
+  insBrinde.run('Mala', 59900, null);       // acima de R$ 599,00
+}
 
 export default db;

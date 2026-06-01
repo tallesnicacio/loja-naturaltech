@@ -23,7 +23,7 @@
       <div class="spacer"></div>
       <button class="linkbtn" id="atualizar">atualizar</button>
       <a class="linkbtn" href="/">Loja</a>
-      <a class="linkbtn" href="/pdv">PDV</a> <a class="linkbtn" href="/separacao">Separação</a>
+      <a class="linkbtn" href="/separacao">Separação</a>
     </div>
 
     <div class="adm">
@@ -34,7 +34,12 @@
         <button class="btn ghost" id="exp-clientes">Exportar clientes (CRM)</button>
       </div>
 
-      <h2>Estoque</h2>
+      <h2>Brindes (por faixa de ticket)</h2>
+      <p style="color:var(--grey);font-size:13px;margin:0 0 8px">Não acumulam: o pedido ganha 1 brinde — a maior faixa que o total atingir. Deixe "Até" vazio para "acima de".</p>
+      <table class="tbl" id="tbl-brindes"></table>
+      <button class="btn ghost" id="add-brinde" style="width:auto;padding:10px 16px;margin-top:8px">+ Adicionar brinde</button>
+
+      <h2 style="margin-top:24px">Estoque</h2>
       <table class="tbl" id="tbl-estoque"></table>
 
       <h2 style="margin-top:24px">Vendas por produto</h2>

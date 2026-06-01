@@ -175,7 +175,7 @@ body.totem { background: var(--laranja-light); }
 .th-brand img { border-radius: 12px; }
 .th-brand b { display: block; font-size: 18px; letter-spacing: .04em; }
 .th-brand small { color: var(--grey); font-size: 12px; }
-.th-tag { font-weight: 700; color: var(--verde); font-size: 14px; }
+.th-tag { font-weight: 700; color: var(--laranja); font-size: 14px; }
 
 .hero { text-align: center; padding: 22px 24px 8px; }
 .hero h1 { font-size: 30px; margin: 0; text-transform: uppercase; }
@@ -359,3 +359,95 @@ body.sep { background: var(--laranja-light); }
 .ok-num { color: var(--laranja); }
 .modal .num { color: var(--laranja); }
 .pag.sel { border-color: var(--laranja); background: #fff5ef; color: var(--marrom); }
+
+/* ===== Grafismo T-Motion de fundo (loja) — em teste, facil de reverter ===== */
+body.totem::before {
+  content: ""; position: fixed; top: -70px; right: -110px;
+  width: 58vh; height: 58vh; max-width: 540px; max-height: 540px;
+  background: url("/icons/logo.png") no-repeat right top / contain;
+  opacity: 0.08; z-index: 0; pointer-events: none;
+}
+#setup, #loja { position: relative; z-index: 1; }
+
+/* ===== Carrinho fixo à direita (loja) + miniatura das fotos ===== */
+.loja-grid { display: grid; grid-template-columns: 1fr 360px; gap: 16px; max-width: 1440px; margin: 0 auto; padding: 0 24px; align-items: start; }
+.loja-main { min-width: 0; }
+.loja-main .filtros { padding-left: 0; padding-right: 0; }
+.loja-main .vitrine { padding: 8px 0 24px; }
+.cart-panel { position: sticky; top: 84px; background: #fff; border-radius: var(--radius-md);
+  padding: 16px; display: flex; flex-direction: column; max-height: calc(100dvh - 100px); }
+.cart-title { margin: 0 0 8px; text-transform: uppercase; font-size: 18px; }
+.cart-panel #cart-itens { overflow-y: auto; flex: 1; min-height: 60px; }
+.cart-foot { border-top: 2px solid var(--marrom); padding-top: 12px; margin-top: 10px; }
+.cart-foot .grand { display: flex; justify-content: space-between; align-items: baseline;
+  font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 22px; }
+.cart-foot .btn { margin-top: 12px; }
+.cart-panel .cart-item { grid-template-columns: 52px 1fr auto; gap: 10px; align-items: center; }
+.ci-foto { width: 52px; height: 52px; object-fit: contain; border-radius: var(--radius-sm);
+  background: #fff; border: 1px solid var(--stroke-light); }
+.ci-foto.ci-ph { background: var(--laranja-light); }
+.ci-info { min-width: 0; }
+.ci-info .nome { font-size: 13px; line-height: 1.2; }
+.ci-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.ci-right .total { font-weight: 700; }
+.ci-right .rm { background: none; border: none; color: var(--vermelho); font-size: 16px; }
+@media (max-width: 900px) {
+  .loja-grid { grid-template-columns: 1fr; }
+  .cart-panel { position: static; max-height: none; }
+}
+
+/* ===== Brindes por faixa de ticket (loja + separacao + admin) ===== */
+.brinde-foto { width: 40px; height: 40px; object-fit: contain; border-radius: var(--radius-sm); background: #fff; border: 1px solid var(--stroke-light); flex: 0 0 auto; }
+.brinde-foto.brinde-ph { display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--laranja-light); }
+
+.cart-brinde { background: var(--laranja-light); border: 1px dashed var(--laranja); border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 10px; font-size: 13px; }
+.cart-brinde .cb-ganhou { display: flex; align-items: center; gap: 8px; color: var(--marrom); }
+.cart-brinde .cb-falta { color: var(--dark); margin-top: 4px; }
+
+.co-brinde { display: flex; align-items: center; gap: 12px; background: var(--laranja-light); border: 1px solid var(--laranja);
+  border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; }
+.co-brinde .brinde-foto { width: 64px; height: 64px; }
+.co-brinde .bg-label { font-size: 12px; font-weight: 700; color: var(--laranja); text-transform: uppercase; }
+.co-brinde .bg-nome { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 700; font-size: 18px; color: var(--marrom); }
+
+.ok-brinde { display: inline-flex; align-items: center; gap: 8px; background: var(--laranja-light);
+  border-radius: var(--radius-pill); padding: 8px 14px; font-size: 14px; }
+
+.ped-brinde { display: inline-block; background: var(--laranja-light); border-radius: var(--radius-sm);
+  padding: 4px 8px; font-size: 13px; font-weight: 700; color: var(--marrom); margin: 4px 0; }
+
+#tbl-brindes .b-in { padding: 6px; border: 1px solid var(--stroke-light); border-radius: 6px; }
+#tbl-brindes .b-nome { width: 150px; }
+.b-fotowrap { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; cursor: pointer;
+  border: 1px dashed var(--stroke-marrom); border-radius: var(--radius-sm); overflow: hidden; }
+.b-foto { width: 48px; height: 48px; object-fit: contain; }
+.b-fotoph { font-size: 11px; color: var(--grey); text-align: center; }
+
+/* ===== Barra de categorias em circulo (estilo vivatrue) ===== */
+.cat-pills { gap: 4px; padding-bottom: 10px; align-items: flex-start; }
+.cat { flex: 0 0 auto; background: none; border: none; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 92px; }
+.cat-circ { width: 76px; height: 76px; border-radius: 50%; background: #f4f1ee; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: background .15s; }
+.cat-circ img { width: 84%; height: 84%; object-fit: contain; }
+.cat-nome { font-size: 13px; font-weight: 700; color: var(--marrom); text-align: center; line-height: 1.15; }
+.cat.sel .cat-circ { box-shadow: 0 0 0 2px var(--laranja); }
+.cat:hover .cat-nome, .cat.sel .cat-nome { color: var(--laranja); }
+
+/* ===== Banner de brindes (faixa larga) ===== */
+.brinde-banner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  max-width: 1392px; margin: 4px auto 0; padding: 12px 20px; background: var(--laranja); color: #fff; border-radius: var(--radius-md); }
+.brinde-banner .bb-tag { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 800; font-size: 16px; white-space: nowrap; }
+.brinde-banner .bb-itens { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; flex: 1; }
+.brinde-banner .bb-item { display: flex; align-items: center; gap: 8px; }
+.brinde-banner .bb-item .brinde-foto { width: 46px; height: 46px; border: none; background: rgba(255,255,255,.92); }
+.brinde-banner .bb-txt { display: flex; flex-direction: column; line-height: 1.1; }
+.brinde-banner .bb-min { font-size: 11px; opacity: .92; }
+.brinde-banner .bb-nome { font-weight: 700; font-size: 15px; }
+.brinde-banner .bb-sep { opacity: .5; }
+@media (max-width: 560px) { .brinde-banner { margin: 4px 12px 0; } .cat-circ { width: 64px; height: 64px; } .cat { width: 78px; } }
+
+/* ===== Loja: fundo branco + sombra nos cards ===== */
+body.totem { background: #fff; }
+.filtros { background: #fff; }
+.prod { border: 1px solid var(--stroke-light); box-shadow: 0 6px 18px rgba(72, 18, 22, .10); }
+.prod:active { box-shadow: 0 2px 8px rgba(72, 18, 22, .12); }
+.cart-panel { border: 1px solid var(--stroke-light); box-shadow: 0 6px 18px rgba(72, 18, 22, .06); }

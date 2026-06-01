@@ -26,9 +26,8 @@
     <header class="totem-header">
       <div class="th-brand">
         <img src="/icons/logo-true.svg" alt="TRUE" class="th-logo">
-        <small id="event-name">Natural Tech</small>
       </div>
-      <div class="th-tag">Viva de verdade 🧡</div>
+      <div class="th-tag">Naturaltech 2026 🧡</div>
     </header>
 
     <div class="hero">
@@ -36,43 +35,41 @@
       <p>Monte seu pedido e chame um(a) promotor(a) para finalizar.</p>
     </div>
 
-    <div class="filtros">
-      <div class="cat-pills" id="categorias"></div>
-      <input id="busca" class="search" placeholder="🔎 Buscar produto..." autocomplete="off">
+    <div id="brinde-banner" class="brinde-banner hidden"></div>
+
+    <div class="loja-grid">
+      <section class="loja-main">
+        <div class="filtros">
+          <div class="cat-pills" id="categorias"></div>
+          <input id="busca" class="search" placeholder="🔎 Buscar produto..." autocomplete="off">
+        </div>
+        <main class="vitrine" id="vitrine"></main>
+      </section>
+
+      <aside class="cart-panel" id="cart-panel">
+        <h2 class="cart-title">Seu pedido</h2>
+        <div id="cart-itens" class="cart"></div>
+        <div class="cart-foot">
+          <div id="cart-brinde" class="cart-brinde hidden"></div>
+          <div class="row grand"><span>TOTAL</span><span id="d-total">R$ 0,00</span></div>
+          <button class="btn laranja" id="ir-checkout" disabled>Finalizar pedido</button>
+        </div>
+      </aside>
     </div>
 
-    <main class="vitrine" id="vitrine"></main>
-    <div style="height:96px"></div> <!-- espaço para a barra do carrinho -->
-
-    <!-- Barra fixa do carrinho -->
-    <button class="cart-bar hidden" id="cartbar">
-      <span class="cb-count" id="cb-count">0</span>
-      <span class="cb-label">Ver pedido</span>
-      <span class="cb-total" id="cb-total">R$ 0,00</span>
-    </button>
-
     <footer class="totem-footer">
-      <a href="/pdv">PDV</a> · <a href="/separacao">Separação</a> · <a href="/admin">Admin</a>
+      <a href="/separacao">Separação</a> · <a href="/admin">Admin</a>
     </footer>
   </div>
 
-  <!-- ===================== CARRINHO (drawer) ===================== -->
-  <div id="drawer" class="drawer-overlay hidden">
-    <div class="drawer">
-      <div class="drawer-head"><h2>Seu pedido</h2><button class="x" id="fechar-cart">✕</button></div>
-      <div id="cart-itens" class="cart"></div>
-      <div class="drawer-foot">
-        <div class="row grand"><span>TOTAL</span><span id="d-total">R$ 0,00</span></div>
-        <button class="btn ghost" id="continuar">Continuar comprando</button>
-        <button class="btn laranja" id="ir-checkout">Finalizar pedido</button>
-      </div>
-    </div>
-  </div>
+  <!-- carrinho agora é um painel fixo (cart-panel) dentro de .loja-grid -->
 
   <!-- ===================== CHECKOUT ===================== -->
   <div id="checkout" class="co-overlay hidden">
     <div class="co">
       <button class="x co-x" id="co-fechar">✕</button>
+
+      <div id="co-brinde" class="co-brinde hidden"></div>
 
       <!-- Passo 1: dados do cliente -->
       <section id="step-dados">
@@ -115,6 +112,7 @@
       <h2>Pedido concluído!</h2>
       <div class="ok-num" id="ok-num">#0</div>
       <p id="ok-total"></p>
+      <p id="ok-brinde" class="ok-brinde hidden"></p>
       <button class="btn laranja" id="ok-imprimir">Imprimir comprovante</button>
       <button class="btn laranja" id="ok-nova">Nova compra</button>
       <p class="ok-auto" id="ok-auto"></p>

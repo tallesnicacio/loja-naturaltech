@@ -65,6 +65,7 @@ export function gerarReciboHTML(pedido, itens, cliente) {
   <div class="row tot"><span>TOTAL</span><span>${reais(pedido.total_centavos)}</span></div>
   <div class="row"><span>Pagamento</span><span>${escapeHtml(FORMA_LABEL[pedido.forma_pagamento] || pedido.forma_pagamento)}</span></div>
   ${pedido.pagamento_nsu ? `<div class="row small"><span>NSU/Aut.</span><span>${escapeHtml(pedido.pagamento_nsu)}</span></div>` : ''}
+  ${pedido.brinde_nome ? `<div class="hr"></div><div class="center tot">🎁 BRINDE: ${escapeHtml(pedido.brinde_nome)}</div>` : ''}
   <div class="hr"></div>
   <div class="center small">Documento NAO fiscal.<br>Nota fiscal sera emitida posteriormente.</div>
   <div class="center small">Obrigado pela compra! 🧡</div>
@@ -115,8 +116,9 @@ export function gerarEscPos(pedido, itens, cliente) {
   s += ESC + '!' + '\x00';
   s += lr('Pagamento', FORMA_LABEL[pedido.forma_pagamento] || pedido.forma_pagamento) + '\n';
   if (pedido.pagamento_nsu) s += lr('NSU/Aut.', pedido.pagamento_nsu) + '\n';
+  if (pedido.brinde_nome) { s += '-'.repeat(COLS) + '\n'; s += center('BRINDE: ' + pedido.brinde_nome) + '\n'; }
   s += '-'.repeat(COLS) + '\n';
-  s += center('Documento NAO fiscal') + '\n';
+  s += center('Documento NÃO fiscal') + '\n';
   s += center('NF emitida posteriormente') + '\n';
   s += center('Obrigado pela compra!') + '\n';
   s += '\n\n\n';

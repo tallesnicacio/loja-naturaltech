@@ -18,7 +18,7 @@ $('#pin').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); }
 $('#atualizar').addEventListener('click', carregarTudo);
 
 async function carregarTudo() {
-  await Promise.all([carregarDashboard(), carregarEstoque(), carregarPedidos()]);
+  await Promise.all([carregarDashboard(), carregarEstoque(), carregarPedidos(), carregarBrindes()]);
 }
 
 async function carregarDashboard() {
@@ -93,6 +93,83 @@ async function carregarPedidos() {
     else { const d = await r.json(); toast(d.erro || 'Erro', 'erro'); }
   }));
 }
+
+// ---------- Brindes (CRUD por faixa de ticket, com foto) ----------
+async function carregarBrindes() {
+  const brindes = await fetch('/api/brindes').then((r) => r.json());
+  const t = $('#tbl-brindes');
+  t.innerHTML = `<tr><th>Foto</th><th>Brinde</th><th class="num">De (R$)</th><th class="num">Até (R$)</th><th>Ativo</th><th></th></tr>` +
+    brindes.map((b) => `
+      <tr data-id="${b.id}">
+        <td>
+          <label class="b-fotowrap" title="Clique para escolher a foto">
+            <img class="b-foto" src="${b.imagem || ''}" ${b.imagem ? '' : 'style="display:none"'} alt="">
+            <span class="b-fotoph" ${b.imagem ? 'style="display:none"' : ''}>+ foto</span>
+            <input type="file" accept="image/*" class="b-file" hidden>
+          </label>
+        </td>
+        <td><input class="b-nome b-in" value="${esc(b.nome)}"></td>
+        <td class="num"><input class="b-min b-in" type="number" step="0.01" min="0" value="${(b.min_centavos / 100).toFixed(2)}" style="width:88px"></td>
+        <td class="num"><input class="b-max b-in" type="number" step="0.01" min="0" value="${b.max_centavos == null ? '' : (b.max_centavos / 100).toFixed(2)}" placeholder="sem limite" style="width:88px"></td>
+        <td><input type="checkbox" class="b-ativo" ${b.ativo ? 'checked' : ''}></td>
+        <td><button class="linkbtn salvar-b">salvar</button> <button class="linkbtn excluir-b" style="color:#C0392B">excluir</button></td>
+      </tr>`).join('');
+
+  t.querySelectorAll('tr[data-id]').forEach((tr) => {
+    const id = tr.dataset.id;
+    let imagemData = (brindes.find((x) => String(x.id) === id) || {}).imagem || null;
+    tr.querySelector('.b-file').addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if (!f) return;
+      try {
+        imagemData = await fileParaDataURL(f, 240);
+        const img = tr.querySelector('.b-foto'); img.src = imagemData; img.style.display = '';
+        tr.querySelector('.b-fotoph').style.display = 'none';
+        toast('Foto carregada — clique em salvar', 'ok');
+      } catch { toast('Falha ao ler a imagem', 'erro'); }
+    });
+    tr.querySelector('.salvar-b').addEventListener('click', async () => {
+      const body = {
+        nome: tr.querySelector('.b-nome').value,
+        min_centavos: Math.round(Number(tr.querySelector('.b-min').value) * 100),
+        max_centavos: tr.querySelector('.b-max').value === '' ? null : Math.round(Number(tr.querySelector('.b-max').value) * 100),
+        ativo: tr.querySelector('.b-ativo').checked ? 1 : 0,
+        imagem: imagemData,
+      };
+      const r = await fetch(`/api/brindes/${id}`, { method: 'POST', headers: H(), body: JSON.stringify(body) });
+      const d = await r.json();
+      toast(r.ok ? 'Brinde salvo' : (d.erro || 'Erro'), r.ok ? 'ok' : 'erro');
+    });
+    tr.querySelector('.excluir-b').addEventListener('click', async () => {
+      if (!confirm('Excluir este brinde?')) return;
+      const r = await fetch(`/api/brindes/${id}/excluir`, { method: 'POST', headers: H() });
+      if (r.ok) { toast('Brinde excluído', 'ok'); carregarBrindes(); } else toast('Erro', 'erro');
+    });
+  });
+}
+// Lê o arquivo e reduz no navegador (mantém o data URL pequeno).
+function fileParaDataURL(file, maxSize) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = reject;
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = reject;
+      img.onload = () => {
+        const escala = Math.min(1, maxSize / Math.max(img.width, img.height));
+        const w = Math.round(img.width * escala), h = Math.round(img.height * escala);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(c.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+$('#add-brinde').addEventListener('click', async () => {
+  const r = await fetch('/api/brindes', { method: 'POST', headers: H(), body: JSON.stringify({ nome: 'Novo brinde', min_centavos: 0, max_centavos: null, ativo: 1 }) });
+  if (r.ok) { toast('Brinde criado — edite e salve', 'ok'); carregarBrindes(); } else toast('Erro', 'erro');
+});
 
 // Downloads precisam do header de PIN -> baixa via blob
 async function baixar(url, nome) {

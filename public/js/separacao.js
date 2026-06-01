@@ -121,6 +121,7 @@ function cardHtml(p, fase) {
       <div class="ped-cli">${esc(p.cliente_nome || 'Cliente')}</div>
       <div class="ped-vend">Vendedor: ${esc(p.operador || '—')}</div>
       <ul class="ped-itens">${itens || '<li>(sem itens)</li>'}</ul>
+      ${p.brinde_nome ? `<div class="ped-brinde">🎁 Brinde: ${esc(p.brinde_nome)}</div>` : ''}
       <div class="ped-foot">
         <span>${totItens} ${totItens === 1 ? 'item' : 'itens'}</span>
         <b>${brl(p.total_centavos)}</b>
