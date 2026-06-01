@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#FB6E13">
   <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="apple-touch-icon" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/logo.png">
+  <link rel="icon" href="/icons/logo.png">
   <title>TRUE · Natural Tech</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
@@ -13,7 +14,7 @@
 
   <!-- Setup do totem (uma vez por aparelho) -->
   <div id="setup" class="setup hidden">
-    <img src="/icons/icon.svg" width="64" height="64" alt="" style="border-radius:16px">
+    <img src="/icons/logo-true.svg" alt="TRUE" style="height:64px;width:auto">
     <h1>Loja TRUE</h1>
     <p>Identifique este totem para começar:</p>
     <div class="field req"><label>Nome do totem / estande</label><input id="su-totem" placeholder="Ex.: Totem 1"></div>
@@ -24,10 +25,10 @@
   <div id="loja" class="hidden">
     <header class="totem-header">
       <div class="th-brand">
-        <img src="/icons/icon.svg" width="44" height="44" alt="TRUE">
-        <div><b>TRUE</b><small id="event-name">Natural Tech</small></div>
+        <img src="/icons/logo-true.svg" alt="TRUE" class="th-logo">
+        <small id="event-name">Natural Tech</small>
       </div>
-      <div class="th-tag">Saúde de verdade 💚</div>
+      <div class="th-tag">Viva de verdade 🧡</div>
     </header>
 
     <div class="hero">
@@ -63,7 +64,7 @@
       <div class="drawer-foot">
         <div class="row grand"><span>TOTAL</span><span id="d-total">R$ 0,00</span></div>
         <button class="btn ghost" id="continuar">Continuar comprando</button>
-        <button class="btn verde" id="ir-checkout">Finalizar pedido</button>
+        <button class="btn laranja" id="ir-checkout">Finalizar pedido</button>
       </div>
     </div>
   </div>
@@ -101,7 +102,7 @@
         <div class="field" id="nsu-field"><label>NSU / Autorização (maquininha)</label><input id="c-nsu" placeholder="Código da maquininha"></div>
         <div class="btn-row">
           <button class="btn ghost" id="p-voltar">Voltar</button>
-          <button class="btn verde" id="confirmar" disabled>Confirmar pagamento</button>
+          <button class="btn laranja" id="confirmar" disabled>Confirmar pagamento</button>
         </div>
       </section>
     </div>
@@ -115,7 +116,7 @@
       <div class="ok-num" id="ok-num">#0</div>
       <p id="ok-total"></p>
       <button class="btn laranja" id="ok-imprimir">Imprimir comprovante</button>
-      <button class="btn verde" id="ok-nova">Nova compra</button>
+      <button class="btn laranja" id="ok-nova">Nova compra</button>
       <p class="ok-auto" id="ok-auto"></p>
     </div>
   </div>

@@ -3,11 +3,11 @@
 // tablets estao sempre na rede local com o servidor no ar). O cache so e usado como
 // reserva se a rede cair por um instante. Assim NUNCA serve HTML/JS desatualizado.
 // /api nunca e cacheado (estoque/pedidos sempre frescos).
-const CACHE = 'pdv-naturaltech-v4';
+const CACHE = 'pdv-naturaltech-v5';
 const SHELL = [
   '/', '/loja.html', '/pdv', '/pdv.html', '/separacao', '/separacao.html', '/admin', '/admin.html',
   '/css/styles.css', '/js/loja.js', '/js/pdv.js', '/js/separacao.js', '/js/admin.js', '/js/cliente-form.js',
-  '/manifest.webmanifest', '/icons/icon.svg', '/fonts/figtree-400.woff2', '/fonts/figtree-700.woff2', '/fonts/figtree-800.woff2', '/fonts/inter-400.woff2', '/fonts/inter-700.woff2',
+  '/manifest.webmanifest', '/icons/logo.png', '/icons/logo-true.svg', '/fonts/figtree-400.woff2', '/fonts/figtree-700.woff2', '/fonts/figtree-800.woff2', '/fonts/inter-400.woff2', '/fonts/inter-700.woff2',
 ];
 
 self.addEventListener('install', (e) => {
