@@ -18,12 +18,39 @@ const state = {
   som: localStorage.getItem('sep_som') !== '0',
 };
 
-$('#conferente').value = state.conferente;
-$('#conferente').addEventListener('input', (e) => {
-  state.conferente = e.target.value.trim();
-  localStorage.setItem('conferente', state.conferente);
-});
 $('#busca').addEventListener('input', (e) => { state.busca = e.target.value.trim().toLowerCase(); render(); });
+
+// ---------- gate: nome do conferente OBRIGATORIO antes de entrar ----------
+let pollTimer;
+function checarSetup() {
+  if (state.conferente) return iniciar();
+  $('#sep-setup').classList.remove('hidden');
+  $('#su-conferente').focus();
+}
+function iniciar() {
+  $('#sep-setup').classList.add('hidden');
+  $('#sep-app').classList.remove('hidden');
+  $('#conf-nome').textContent = state.conferente;
+  carregar();
+  clearInterval(pollTimer);
+  pollTimer = setInterval(carregar, 4000);
+}
+$('#su-conf-ok').addEventListener('click', () => {
+  const v = $('#su-conferente').value.trim();
+  if (v.length < 2) return toast('Informe seu nome', 'erro');
+  state.conferente = v;
+  localStorage.setItem('conferente', v);
+  iniciar();
+});
+$('#su-conferente').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#su-conf-ok').click(); });
+$('#trocar-conf').addEventListener('click', () => {
+  localStorage.removeItem('conferente'); state.conferente = '';
+  clearInterval(pollTimer);
+  $('#sep-app').classList.add('hidden');
+  $('#su-conferente').value = '';
+  $('#sep-setup').classList.remove('hidden');
+  $('#su-conferente').focus();
+});
 
 // ---------- som ----------
 function aplicarSomBtn() { $('#som').textContent = state.som ? '🔔' : '🔕'; }
@@ -179,5 +206,4 @@ function toast(msg, tipo = '') {
 }
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
-carregar();
-setInterval(carregar, 4000);
+checarSetup();

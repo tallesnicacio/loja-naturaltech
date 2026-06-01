@@ -10,10 +10,22 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body class="sep">
+
+  <!-- Gate: nome do conferente obrigatorio antes de entrar -->
+  <div id="sep-setup" class="setup hidden">
+    <img src="/icons/logo-true.svg" alt="TRUE" style="height:48px;width:auto">
+    <h1>Separação</h1>
+    <p>Identifique-se para começar a conferir os pedidos.</p>
+    <div class="field req"><label>Nome do conferente</label><input id="su-conferente" placeholder="Seu nome"></div>
+    <button class="btn laranja" id="su-conf-ok">Entrar</button>
+  </div>
+
+  <div id="sep-app" class="hidden">
   <div class="topbar">
     <div class="brand">TRUE<small id="event-name">Separação · Natural Tech</small></div>
     <div class="spacer"></div>
-    <label class="conf">Conferente: <input id="conferente" placeholder="seu nome"></label>
+    <span class="conf">Conferente: <b id="conf-nome"></b></span>
+    <button class="linkbtn" id="trocar-conf">trocar</button>
     <input id="busca" class="sep-busca" placeholder="🔎 pedido ou cliente" autocomplete="off">
     <button class="linkbtn som" id="som" title="Alerta sonoro de novo pedido">🔔</button>
     <span class="auto" id="auto">atualizando…</span>
@@ -41,6 +53,7 @@
       <div class="col-head cancelado"><span>Cancelado</span><span class="cnt" id="cnt-cancelado">0</span></div>
       <div class="col-body" id="col-cancelado"></div>
     </section>
+  </div>
   </div>
 
   <div id="toast" class="toast hidden"></div>

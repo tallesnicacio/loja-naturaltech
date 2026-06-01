@@ -71,6 +71,9 @@ function renderCategorias() {
 // Banner que lembra os brindes (faixa larga, dinamica a partir dos brindes ativos).
 function renderBrindeBanner() {
   const el = $('#brinde-banner'); if (!el) return;
+  // Banner estatico (imagem) tem prioridade: se houver <img>, apenas exibe (nao sobrescreve).
+  if (el.querySelector('img')) { el.classList.add('tem-img'); el.classList.remove('hidden'); return; }
+  el.classList.remove('tem-img');
   const ativos = brindesAtivos();
   if (!ativos.length) { el.classList.add('hidden'); el.innerHTML = ''; return; }
   el.classList.remove('hidden');

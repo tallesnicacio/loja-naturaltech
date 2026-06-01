@@ -10,3 +10,6 @@ data/backups/
 
 # fotos de brinde de exemplo (gerenciadas pelo Admin via upload; nao versionar)
 public/img/TRUE-*
+
+# banner de teste (trocar pelo banner final depois)
+public/img/banner-teste.*

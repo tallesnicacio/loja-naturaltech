@@ -426,7 +426,7 @@ body.totem::before {
 /* ===== Barra de categorias em circulo (estilo vivatrue) ===== */
 .cat-pills { gap: 4px; padding-bottom: 10px; align-items: flex-start; }
 .cat { flex: 0 0 auto; background: none; border: none; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; gap: 8px; width: 92px; }
-.cat-circ { width: 76px; height: 76px; border-radius: 50%; background: #f4f1ee; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: background .15s; }
+.cat-circ { width: 76px; height: 76px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: background .15s; }
 .cat-circ img { width: 84%; height: 84%; object-fit: contain; }
 .cat-nome { font-size: 13px; font-weight: 700; color: var(--marrom); text-align: center; line-height: 1.15; }
 .cat.sel .cat-circ { box-shadow: 0 0 0 2px var(--laranja); }
@@ -434,7 +434,7 @@ body.totem::before {
 
 /* ===== Banner de brindes (faixa larga) ===== */
 .brinde-banner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-  max-width: 1392px; margin: 4px auto 0; padding: 12px 20px; background: var(--laranja); color: #fff; border-radius: var(--radius-md); }
+  max-width: 1392px; margin: 4px auto 0; padding: 12px 20px; background: var(--branco); color: #fff; border-radius: var(--radius-md); }
 .brinde-banner .bb-tag { font-family: "ABC Solar", "Figtree", sans-serif; font-weight: 800; font-size: 16px; white-space: nowrap; }
 .brinde-banner .bb-itens { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; flex: 1; }
 .brinde-banner .bb-item { display: flex; align-items: center; gap: 8px; }
@@ -451,3 +451,7 @@ body.totem { background: #fff; }
 .prod { border: 1px solid var(--stroke-light); box-shadow: 0 6px 18px rgba(72, 18, 22, .10); }
 .prod:active { box-shadow: 0 2px 8px rgba(72, 18, 22, .12); }
 .cart-panel { border: 1px solid var(--stroke-light); box-shadow: 0 6px 18px rgba(72, 18, 22, .06); }
+
+/* Banner estatico (imagem) ocupa a faixa inteira, sem o fundo laranja do dinamico */
+.brinde-banner.tem-img { display: block; background: none; padding: 0; }
+.brinde-banner img { display: block; width: 100%; height: auto; border-radius: var(--radius-md); }
