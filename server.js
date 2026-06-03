@@ -1,3 +1,4 @@
+import './src/load-env.js'; // PRIMEIRO: carrega .env antes de print.js & cia. lerem env no load-time
 import express from 'express';
 import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -6,9 +7,6 @@ import { networkInterfaces } from 'node:os';
 import { db, DB_PATH } from './src/db.js';
 import { gerarEscPos, imprimirNaRede, imprimirViaCups } from './src/print.js';
 import { exportVendasSankhya, exportClientes } from './src/export.js';
-
-// Carrega .env (Node 20.12+/21.7+). Silencioso se nao existir.
-try { process.loadEnvFile(); } catch { /* sem .env, usa defaults */ }
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.PORT || 3322);
