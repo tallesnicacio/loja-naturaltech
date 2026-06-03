@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { networkInterfaces } from 'node:os';
 import { db, DB_PATH } from './src/db.js';
-import { gerarReciboHTML, gerarEscPos, imprimirNaRede } from './src/print.js';
+import { gerarEscPos, imprimirNaRede, imprimirViaCups } from './src/print.js';
 import { exportVendasSankhya, exportClientes } from './src/export.js';
 
 // Carrega .env (Node 20.12+/21.7+). Silencioso se nao existir.
@@ -18,7 +18,12 @@ const RECEIPT_MODE = process.env.RECEIPT_MODE || 'browser';
 
 const app = express();
 app.use(express.json({ limit: '6mb' })); // 6mb: fotos de brinde vao como data URL
-app.use(express.static(join(__dirname, 'public')));
+// no-cache: o navegador revalida o asset (HTML/JS/CSS) a cada uso. Evita tablet
+// rodando JS antigo em cache depois de um deploy durante o evento.
+app.use(express.static(join(__dirname, 'public'), {
+  etag: true,
+  setHeaders: (res) => res.setHeader('Cache-Control', 'no-cache'),
+}));
 
 // ---------- helpers ----------
 const FORMAS = new Set(['credito', 'debito', 'pix', 'dinheiro']);
@@ -273,23 +278,16 @@ app.get('/api/pedidos/:id', (req, res) => {
   res.json({ pedido, itens, cliente });
 });
 
-// Recibo imprimivel (HTML 80mm)
-app.get('/api/pedidos/:id/recibo', (req, res) => {
-  const pedido = stmtPedido.get(req.params.id);
-  if (!pedido) return res.status(404).send('Pedido nao encontrado.');
-  const itens = stmtItensPedido.all(pedido.id);
-  const cliente = pedido.cliente_id ? stmtCliente.get(pedido.cliente_id) : null;
-  res.type('html').send(gerarReciboHTML(pedido, itens, cliente));
-});
-
-// Impressao em impressora termica de rede (ESC/POS)
+// Impressao termica (ESC/POS): USB local via CUPS ou impressora de rede.
 app.post('/api/pedidos/:id/imprimir', async (req, res) => {
   const pedido = stmtPedido.get(req.params.id);
   if (!pedido) return res.status(404).json({ erro: 'Pedido nao encontrado.' });
   const itens = stmtItensPedido.all(pedido.id);
   const cliente = pedido.cliente_id ? stmtCliente.get(pedido.cliente_id) : null;
   try {
-    await imprimirNaRede(gerarEscPos(pedido, itens, cliente));
+    const buffer = gerarEscPos(pedido, itens, cliente);
+    if (RECEIPT_MODE === 'cups') await imprimirViaCups(buffer);
+    else await imprimirNaRede(buffer);
     res.json({ ok: true });
   } catch (e) {
     res.status(502).json({ erro: 'Falha ao imprimir: ' + e.message });

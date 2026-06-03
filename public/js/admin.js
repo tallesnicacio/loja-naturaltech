@@ -82,7 +82,7 @@ async function carregarPedidos() {
         <td class="num">${brl(p.total_centavos)}</td>
         <td><span class="tag ${p.status}">${p.status}</span></td>
         <td>
-          <a class="linkbtn" href="/api/pedidos/${p.id}/recibo" target="_blank">recibo</a>
+          <button class="linkbtn imprimir" data-id="${p.id}">imprimir</button>
           ${p.status === 'pago' ? `<button class="linkbtn cancelar" data-id="${p.id}" style="color:#C0392B">cancelar</button>` : ''}
         </td>
       </tr>`).join('');
@@ -91,6 +91,10 @@ async function carregarPedidos() {
     const r = await fetch(`/api/pedidos/${b.dataset.id}/cancelar`, { method: 'POST', headers: H(), body: JSON.stringify({ operador: 'admin' }) });
     if (r.ok) { toast('Pedido cancelado', 'ok'); carregarTudo(); }
     else { const d = await r.json(); toast(d.erro || 'Erro', 'erro'); }
+  }));
+  $('#tbl-pedidos').querySelectorAll('.imprimir').forEach((b) => b.addEventListener('click', async () => {
+    const r = await fetch(`/api/pedidos/${b.dataset.id}/imprimir`, { method: 'POST' });
+    toast(r.ok ? `Recibo #${b.dataset.id} enviado` : 'Falha na impressora', r.ok ? 'ok' : 'erro');
   }));
 }
 

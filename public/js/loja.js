@@ -344,18 +344,24 @@ function mostrarSucesso(pedido) {
     } else { okb.classList.add('hidden'); }
   }
   $('#sucesso').classList.remove('hidden');
+  if (impressaoNoServidor()) imprimirNoServidor(pedido.id); // CUPS/rede: imprime sozinho
   let s = 25;
   $('#ok-auto').textContent = `Nova compra automática em ${s}s`;
   clearInterval(autoCount);
   autoCount = setInterval(() => { s--; $('#ok-auto').textContent = `Nova compra automática em ${s}s`; if (s <= 0) novaCompra(); }, 1000);
 }
+// modos em que o proprio servidor imprime (USB via CUPS ou impressora de rede)
+const impressaoNoServidor = () => state.receiptMode === 'network' || state.receiptMode === 'cups';
+async function imprimirNoServidor(id) {
+  try {
+    const r = await fetch(`/api/pedidos/${id}/imprimir`, { method: 'POST' });
+    toast(r.ok ? 'Enviado para impressora' : 'Falha na impressora', r.ok ? 'ok' : 'erro');
+  } catch { toast('Falha na impressora', 'erro'); }
+}
 $('#ok-nova').addEventListener('click', novaCompra);
-$('#ok-imprimir').addEventListener('click', async () => {
+$('#ok-imprimir').addEventListener('click', () => {
   const id = state.ultimoPedidoId; if (!id) return;
-  if (state.receiptMode === 'network') {
-    try { const r = await fetch(`/api/pedidos/${id}/imprimir`, { method: 'POST' }); toast(r.ok ? 'Enviado para impressora' : 'Falha na impressora', r.ok ? 'ok' : 'erro'); }
-    catch { toast('Falha na impressora', 'erro'); }
-  } else { window.open(`/api/pedidos/${id}/recibo`, '_blank'); }
+  imprimirNoServidor(id);
 });
 
 function novaCompra() {

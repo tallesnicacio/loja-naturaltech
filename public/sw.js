@@ -3,7 +3,7 @@
 // tablets estao sempre na rede local com o servidor no ar). O cache so e usado como
 // reserva se a rede cair por um instante. Assim NUNCA serve HTML/JS desatualizado.
 // /api nunca e cacheado (estoque/pedidos sempre frescos).
-const CACHE = 'pdv-naturaltech-v6';
+const CACHE = 'pdv-naturaltech-v8';
 const SHELL = [
   '/', '/loja.html', '/separacao', '/separacao.html', '/admin', '/admin.html',
   '/css/styles.css', '/js/loja.js', '/js/separacao.js', '/js/admin.js', '/js/cliente-form.js',

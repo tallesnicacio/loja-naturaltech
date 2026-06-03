@@ -178,7 +178,7 @@ function cardHtml(p, fase) {
       ${p.entrega_operador && fase === 'entregue' ? `<div class="ped-conf">por ${esc(p.entrega_operador)} ${hora(p.entrega_updated_at)}</div>` : ''}
       <div class="ped-acts">
         ${botoes(p, fase)}
-        <a class="linkbtn mini" href="/api/pedidos/${p.id}/recibo" target="_blank">imprimir</a>
+        <button class="linkbtn mini imprimir" data-id="${p.id}">imprimir</button>
       </div>
     </div>`;
 }
@@ -203,6 +203,7 @@ function render() {
   document.querySelectorAll('.ped').forEach((el) => {
     const id = Number(el.dataset.id);
     el.querySelectorAll('[data-mv]').forEach((b) => b.addEventListener('click', () => mover(id, b.dataset.mv)));
+    el.querySelector('.imprimir')?.addEventListener('click', () => imprimirRecibo(id));
   });
 }
 
@@ -219,6 +220,13 @@ async function mover(id, novaFase) {
     else if (novaFase === 'entregue') toast(`Pedido #${id} entregue ✓`, 'ok');
   } catch { toast('Falha de conexão', 'erro'); }
   carregar();
+}
+
+async function imprimirRecibo(id) {
+  try {
+    const r = await fetch(`/api/pedidos/${id}/imprimir`, { method: 'POST' });
+    toast(r.ok ? `Recibo #${id} enviado` : 'Falha na impressora', r.ok ? 'ok' : 'erro');
+  } catch { toast('Falha na impressora', 'erro'); }
 }
 
 let tt;
