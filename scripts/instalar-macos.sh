@@ -78,7 +78,7 @@ ok "brew $(brew --version | head -1 | awk '{print $2}')"
 
 # ---------- 2. git + Node (22 LTS) ----------
 titulo "git e Node.js"
-command -v git >/dev/null 2>&1 || { info "instalando git…"; brew install git; }
+command -v git >/dev/null 2>&1 || { info "instalando git..."; brew install git; }
 ok "git $(git --version | awk '{print $3}')"
 
 node_major() { node -v 2>/dev/null | sed 's/^v//' | cut -d. -f1; }
@@ -86,7 +86,7 @@ node_ok()    { command -v node >/dev/null 2>&1 || return 1; case "$NODE_OK_MAJOR
 
 if ! node_ok; then
   cur="$(command -v node >/dev/null 2>&1 && node -v || echo nenhum)"
-  info "Node atual ($cur) não tem binário pronto do better-sqlite3 — instalando $NODE_FORMULA…"
+  info "Node atual ($cur) não tem binário pronto do better-sqlite3 — instalando $NODE_FORMULA..."
   brew install "$NODE_FORMULA"
   # node@22 é keg-only: prioriza no PATH desta sessão, mesmo se houver outro node linkado.
   prefix="$(brew --prefix "$NODE_FORMULA" 2>/dev/null || true)"
@@ -107,7 +107,7 @@ if [ -z "$PROJECT_DIR" ]; then
   if [ -d "$TARGET_DIR/.git" ]; then
     PROJECT_DIR="$TARGET_DIR"
   else
-    info "clonando em $TARGET_DIR …"
+    info "clonando em $TARGET_DIR ..."
     # GIT_TERMINAL_PROMPT=0: se o repo estiver privado, falha na hora em vez de
     # travar o Terminal pedindo usuário/senha do GitHub.
     if ! GIT_TERMINAL_PROMPT=0 git clone "$REPO_URL" "$TARGET_DIR"; then
@@ -130,7 +130,7 @@ ok "projeto em $PROJECT_DIR"
 
 # ---------- 4. Dependências ----------
 titulo "Dependências (npm)"
-npm install || { aviso "Limpando node_modules e reinstalando…"; rm -rf node_modules; npm install; }
+npm install || { aviso "Limpando node_modules e reinstalando..."; rm -rf node_modules; npm install; }
 # Critério real de sucesso: o módulo nativo carrega NESTA versão do Node. Se um
 # install anterior tiver deixado um better-sqlite3 de outro Node (ex.: o 26 que
 # falhou), reinstala do zero para baixar o binário certo.
@@ -138,7 +138,7 @@ npm install || { aviso "Limpando node_modules e reinstalando…"; rm -rf node_mo
 # `require` não valida a ABI (o .node só carrega em `new Database()`).
 sqlite_ok() { node -e "new (require('better-sqlite3'))(':memory:').close()" >/dev/null 2>&1; }
 if ! sqlite_ok; then
-  aviso "better-sqlite3 incompatível com o Node atual — reinstalando do zero…"
+  aviso "better-sqlite3 incompatível com o Node atual — reinstalando do zero..."
   rm -rf node_modules
   npm install
 fi
@@ -178,7 +178,7 @@ else
   lpstat -p 2>/dev/null | awk '/^printer/{print "    - "$2}' || true
   echo
   if confirma "Registrar/configurar a impressora térmica USB agora? (precisa estar ligada e conectada)"; then
-    info "Procurando impressoras USB… (pode pedir a senha do Mac)"
+    info "Procurando impressoras USB... (pode pedir a senha do Mac)"
     # bash 3.2 (padrão do macOS) não tem mapfile — popula o array no laço.
     URIS=()
     while IFS= read -r _u; do [ -n "$_u" ] && URIS+=("$_u"); done \
@@ -219,7 +219,7 @@ fi
 titulo "Banco de dados (catálogo + estoque)"
 if [ -f data/loja.db ]; then
   aviso "Já existe data/loja.db — NÃO vou resetar o estoque (pode haver vendas)."
-  info "Sincronizando catálogo preservando o saldo atual…"
+  info "Sincronizando catálogo preservando o saldo atual..."
   npm run seed
 else
   info "Banco novo: gravando catálogo, preços e estoque do CSV."
