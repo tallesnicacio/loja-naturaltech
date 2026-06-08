@@ -1,5 +1,5 @@
 sku,ean,nome,categoria,imagem,ncm,preco_cheio,preco,estoque,codprod_sankhya
-TS-MAGREL-MAR-350,0618341317550,Magnésio Relief Maracujá 350g,Relaxamento & sono,TS-MAGREL-MAR-350.jpg,,259.00,181.30,243,10855
+TS-MAGREL-MAR-350,0618341317550,Magnésio Relief Maracujá 350g,Relaxamento & sono,TS-MAGREL-MAR-350.jpg,,259.90,181.93,243,10855
 TS-IRON-LIQ-30,0618341318090,Iron Plus Líquido 30ml,Disposição & vitalidade,TS-IRON-LIQ-30.jpg,,99.90,69.93,502,13609
 TS-DHA-LIQ-30,0609963483549,DHA Líquido 30ml,Family care,TS-DHA-LIQ-30.jpg,,89.90,62.93,329,10079
 TS-MAGREL-CAM-350,0618341318045,Magnésio Relief Camomila 350g,Relaxamento & sono,TS-MAGREL-CAM-350.jpg,,259.90,181.93,84,10114
@@ -11,10 +11,10 @@ TS-BEEF-DBLCHOC-837,0040141161499,True Beef Protein Dbl Choc 837g,Força & perfo
 TS-PROT-YUMMY-900,0074468240308,True Protein Yummy Milk 900g,Força & performance,TS-PROT-YUMMY-900.jpg,,299.90,209.93,51,10131
 TS-VEGAN-CHOCAV-837,7898957506835,True Vegan Chocolate com Avelã 837g,Força & performance,TS-VEGAN-CHOCAV-837.jpg,,349.90,244.93,37,10028
 TS-CREA-PURE-300,0618341317536,True Creatine 100% Pure 300g,Força & performance,TS-CREA-PURE-300.jpg,,109.90,76.93,189,10022
-TS-ENERG-FRUIT-360,0618341317796,True Energyzer Fruit Punch 300g,Força & performance,TS-ENERG-FRUIT-360.jpg,,179.90,125.93,74,10109
+TS-ENERG-FRUIT-360,0618341317796,True Energyzer Fruit Punch 360g,Força & performance,TS-ENERG-FRUIT-360.jpg,,179.90,125.93,74,10109
 TS-COQ10-UBI-60,0618341317901,True CoQ10 Ubiquinol Lipossomal 60cps,Disposição & vitalidade,TS-COQ10-UBI-60.jpg,,199.90,139.93,106,10101
 TS-OMEGA3-VITE-180,0609963483211,True Ômega 3 com Vitamina E 180cps,Family care,TS-OMEGA3-VITE-180.jpg,,269.90,188.93,79,10121
-TS-VITC-LIPO-180,0618341317703,True Vitamina C Lipossomal 180cps,Disposição & vitalidade,TS-VITC-LIPO-180.png,,269.90,188.93,40,13290
+TS-CURC-OMEGA-120,,True Cúrcuma + Ômega Lipossomal 120 Cápsulas,Disposição & vitalidade,TS-CURC-OMEGA-120.jpg,,189.90,132.93,56,
 TS-GUT-BAL-450,0074468240209,True Gut Balance 450g,Disposição & vitalidade,TS-GUT-BAL-450.png,,159.90,111.93,46,10068
 TS-COLL-REDB-450,0040141161550,Collagen Protein Bodybalance Red Berries 450g,Disposição & vitalidade,TS-COLL-REDB-450.jpg,,239.90,167.93,41,10000
 TS-CRUNCH-CHOC-25,0040141161093,True Crunch Pro Chocolate Meio Amargo 25g,Snacks proteicos,TS-CRUNCH-CHOC-25.jpg,,11.66,8.16,214,10105
@@ -24,3 +24,4 @@ TS-BAR-CARAM-35,0618341318342,True Protein Bar Caramelo 35g,Snacks proteicos,TS-
 TS-BAR-COCO-35,0040141160874,True Protein Bar Coconut 35g,Snacks proteicos,TS-BAR-COCO-35.jpg,,14.99,10.49,327,10127
 TS-MAGREL3-MAR-350,0631911666629,Magnésio Relief 3.0 Sem Melatonina Maracujá 350g,Relaxamento & sono,TS-MAGREL3-MAR-350.jpg,,259.90,181.93,25,15404
 TS-MAGREL3-LEM-350,0631911666636,Magnésio Relief 3.0 Sem Melatonina Lemonade 350g,Relaxamento & sono,TS-MAGREL3-LEM-350.jpg,,259.90,181.93,25,15412
+TS-MAGREL3-CAPLIM-350,,True Magnésio + Inositol Relief 3.0 Capim Limão e Hortelã 350g,Relaxamento & sono,,,259.90,181.93,25,

@@ -8,6 +8,10 @@ data/backups/
 .DS_Store
 .claude/
 
+# planilha de planejamento da feira: contem CUSTO, MARGEM e LUCRO — NUNCA versionar
+# (repo publico). E so a fonte para gerar data/catalogo.csv.
+data/catalogo-prod.csv
+
 # fotos de brinde de exemplo (gerenciadas pelo Admin via upload; nao versionar)
 public/img/TRUE-*
 
