@@ -132,6 +132,11 @@ A loja oferece **brindes por faixa de valor**: quando o pedido atinge o valor m�
 ele é concedido automaticamente, aparece no recibo e na tela de separação. A loja mostra um banner
 lembrando os brindes ativos (imagem estática ou faixa dinâmica a partir dos brindes cadastrados).
 
+Os **brindes padrão** ficam em `data/brindes.json` (versionado, com as imagens embutidas). Num banco
+**novo** eles são carregados automaticamente — cada notebook já nasce com os brindes certos. Depois
+dá pra editar/incluir/remover pela tela de **Admin** (isso muda só o banco daquela máquina; para
+virar o novo padrão de todos, regenere o `data/brindes.json`).
+
 ## Nota fiscal (pós-evento)
 As notas **não** são emitidas na hora. O sistema captura todos os dados fiscais (produto, SKU,
 quantidade, preço, CPF/nome do cliente). Depois do evento, com internet:
@@ -189,6 +194,7 @@ src/print.js         recibo térmico ESC/POS (CUPS USB ou rede TCP 9100)
 src/export.js        export Sankhya (NF) e clientes (CRM)
 public/              Loja (/), Separação (/separacao), Admin (/admin), CSS (tokens TRUE), PWA
 data/catalogo.csv    catálogo (você preenche preço/estoque)
+data/brindes.json    brindes padrão por faixa (com imagem) — seed de banco novo
 data/loja.db         banco SQLite (gerado; não versionar)
 scripts/backup.js    backup manual
 ```

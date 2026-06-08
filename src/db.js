@@ -1,5 +1,5 @@
 import Database from 'better-sqlite3';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -129,12 +129,18 @@ if (!colsPedido.includes('brinde_nome')) db.exec('ALTER TABLE pedidos ADD COLUMN
 const colsBrinde = db.prepare('PRAGMA table_info(brindes)').all().map((c) => c.name);
 if (!colsBrinde.includes('imagem')) db.exec('ALTER TABLE brindes ADD COLUMN imagem TEXT');
 
-// Brindes padrao (so se a tabela estiver vazia) — editaveis no /admin.
+// Brindes padrao (so se a tabela estiver vazia) — carregados de data/brindes.json
+// (versionado, viaja junto no clone). Depois ficam editaveis no /admin.
 if (db.prepare('SELECT COUNT(*) AS n FROM brindes').get().n === 0) {
-  const insBrinde = db.prepare('INSERT INTO brindes (nome, min_centavos, max_centavos) VALUES (?, ?, ?)');
-  insBrinde.run('Garrafa', 29900, 39800);   // R$ 299,00 a R$ 398,00
-  insBrinde.run('Camisa', 39900, 59800);    // R$ 399,00 a R$ 598,00
-  insBrinde.run('Mala', 59900, null);       // acima de R$ 599,00
+  const brindesPath = join(__dirname, '..', 'data', 'brindes.json');
+  let padrao = [];
+  try { if (existsSync(brindesPath)) padrao = JSON.parse(readFileSync(brindesPath, 'utf8')); }
+  catch { padrao = []; /* json invalido: comeca sem brindes (cadastra no /admin) */ }
+  const insBrinde = db.prepare('INSERT INTO brindes (nome, min_centavos, max_centavos, imagem, ativo) VALUES (?, ?, ?, ?, ?)');
+  const carregar = db.transaction((lista) => {
+    for (const b of lista) insBrinde.run(b.nome, b.min_centavos, b.max_centavos ?? null, b.imagem ?? null, b.ativo ?? 1);
+  });
+  carregar(padrao);
 }
 
 export default db;
