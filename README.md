@@ -33,18 +33,37 @@ item duas vezes mesmo com várias vendas simultâneas.
 | **Admin** | `/admin` | Dashboard de vendas, estoque (+/-), cancelamento, exports e reimpressão. Protegido por `ADMIN_PIN`. |
 
 ## Pré-requisitos
-- Node.js 20+ (testado no 24). `node --version`
+- **Node.js 22 LTS** (recomendado). O `better-sqlite3` tem binário pronto só até o Node 23;
+  no **Node 24+** ele precisa compilar (exige Command Line Tools) e no **Node 26** a
+  compilação falha. O instalador automático já fixa o 22. `node --version`
 - `git` (para clonar/atualizar). `git --version`
 
 ## Instalação numa máquina NOVA da feira (clonando do GitHub)
 
-> Faça **com internet** (antes do evento). Precisa de **Node.js 20+** e **git**.
+> Faça **com internet** (antes do evento).
+
+### Jeito fácil — instalador automático (macOS)
+Um script cuida de tudo: instala **Homebrew**, **Node 20+** e **git**, clona o projeto,
+roda `npm install`, monta o `.env` (perguntando PIN, nome da loja e largura do papel),
+**registra a impressora térmica USB no CUPS**, cria o banco com o catálogo e ainda
+imprime um recibo de teste. Numa máquina pelada, cole no **Terminal**:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tallesnicacio/loja-naturaltech/main/scripts/instalar-macos.sh)"
+```
+
+Se o repositório **já está clonado**, rode de dentro dele: `bash scripts/instalar-macos.sh`.
+É **idempotente** (pode rodar de novo sem medo) e **nunca reseta o estoque** se o banco
+já tiver vendas. No fim ele mostra o IP do Mac e as URLs dos tablets.
+
+### Manual (passo a passo)
+> Precisa de **Node.js 20+** e **git**.
 
 ```bash
 git clone https://github.com/tallesnicacio/loja-naturaltech.git
 cd loja-naturaltech
-npm install                  # dependências (better-sqlite3 vem pré-compilado)
-cp .env.example .env         # no Windows: copy .env.example .env  — ajuste ADMIN_PIN, impressora, etc.
+npm install                  # dependências (com Node 22, better-sqlite3 vem pré-compilado)
+cp .env.example .env         # ajuste ADMIN_PIN, impressora, etc.
 npm run seed:reset-estoque   # cria o banco com catálogo + preço + estoque do CSV
 npm start                    # sobe o servidor; o banner mostra o IP de acesso
 ```
