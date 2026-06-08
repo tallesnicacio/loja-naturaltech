@@ -134,12 +134,15 @@ npm install || { aviso "Limpando node_modules e reinstalando…"; rm -rf node_mo
 # Critério real de sucesso: o módulo nativo carrega NESTA versão do Node. Se um
 # install anterior tiver deixado um better-sqlite3 de outro Node (ex.: o 26 que
 # falhou), reinstala do zero para baixar o binário certo.
-if ! node -e "require('better-sqlite3')" >/dev/null 2>&1; then
+# Instancia um Database :memory: para forçar o dlopen do binário nativo — só
+# `require` não valida a ABI (o .node só carrega em `new Database()`).
+sqlite_ok() { node -e "new (require('better-sqlite3'))(':memory:').close()" >/dev/null 2>&1; }
+if ! sqlite_ok; then
   aviso "better-sqlite3 incompatível com o Node atual — reinstalando do zero…"
   rm -rf node_modules
   npm install
 fi
-node -e "require('better-sqlite3')" >/dev/null 2>&1 || morrer "better-sqlite3 não carregou nesta máquina (veja o erro acima)."
+sqlite_ok || morrer "better-sqlite3 não carregou nesta máquina (veja o erro acima)."
 ok "node_modules pronto (better-sqlite3 OK)"
 
 # ---------- 5. .env ----------

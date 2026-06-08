@@ -15,12 +15,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."   # raiz do projeto
 
-carrega() { [ -x "$1" ] && "$1" -e "require('better-sqlite3')" >/dev/null 2>&1; }
+# Testa se o better-sqlite3 carrega DE VERDADE neste Node. Precisa INSTANCIAR um
+# Database: `require('better-sqlite3')` sozinho NÃO toca no binário nativo — o
+# dlopen do .node só acontece em `new Database()`. Um require seco dá
+# falso-positivo mesmo com ABI incompatível. Abrir um banco :memory: força o load.
+carrega() { [ -x "$1" ] && "$1" -e "new (require('better-sqlite3'))(':memory:').close()" >/dev/null 2>&1; }
 
-# Carrega o Homebrew no PATH (o launcher pode rodar fora de um shell logado,
-# ex.: duplo-clique no .command pelo Finder).
+# Localiza o Homebrew SEM mexer no PATH. `brew shellenv` prepende /opt/homebrew/bin,
+# e se houver uma fórmula `node` linkada lá (ex.: Node 26) ela mascararia o node@22.
+BREW=""
 for b in /opt/homebrew/bin/brew /usr/local/bin/brew; do
-  [ -x "$b" ] && eval "$("$b" shellenv)" && break
+  [ -x "$b" ] && { BREW="$b"; break; }
 done
 
 # Candidatos a Node, em ordem de preferência:
@@ -30,7 +35,8 @@ done
 CANDS=()
 command -v node >/dev/null 2>&1 && CANDS+=("$(command -v node)")
 for f in node@22 node@20; do
-  p="$(brew --prefix "$f" 2>/dev/null || true)/bin/node"
+  [ -n "$BREW" ] || break
+  p="$("$BREW" --prefix "$f" 2>/dev/null || true)/bin/node"
   [ -x "$p" ] && CANDS+=("$p")
 done
 [ "${#CANDS[@]}" -gt 0 ] || { echo "Node não encontrado. Rode: bash scripts/instalar-macos.sh"; exit 1; }
