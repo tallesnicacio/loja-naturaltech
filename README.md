@@ -89,6 +89,18 @@ npm run seed:reset-estoque   # USAR SÓ no pré-evento: grava preço E estoque d
 > Para repor estoque no meio do evento, use a tela **Admin → Estoque → aplicar (+/-)**.
 > Preços também podem ser ajustados pelo Admin sem mexer no CSV.
 
+### Zerar o banco (voltar ao original) — só no pré-evento
+Depois de **testar**, para apagar as vendas/clientes de teste e recriar o banco
+só com o catálogo + estoque do CSV:
+
+```bash
+npm run reset
+```
+
+Pede confirmação (digite `RESETAR`) e **faz backup automático** do banco atual em
+`data/backups/` antes de apagar. Já usa o Node certo (igual ao `npm start`), então
+funciona mesmo num Mac com Node 24/26. **Não rode com vendas reais em andamento.**
+
 ## Rodar (no dia)
 
 ```bash

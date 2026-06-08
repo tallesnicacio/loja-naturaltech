@@ -8,6 +8,7 @@
     "start:raw": "node server.js",
     "seed": "node src/seed.js",
     "seed:reset-estoque": "node src/seed.js --reset-estoque",
+    "reset": "bash scripts/resetar-banco.sh",
     "backup": "node scripts/backup.js"
   },
   "engines": {
