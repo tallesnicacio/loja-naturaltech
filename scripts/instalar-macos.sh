@@ -124,6 +124,8 @@ cd "$PROJECT_DIR"
 if [ -d .git ]; then
   GIT_TERMINAL_PROMPT=0 git pull --ff-only 2>/dev/null && ok "código atualizado (git pull)" || aviso "git pull pulado (alterações locais, offline ou repo privado) — seguindo com o que está aqui."
 fi
+# garante o bit de execução dos launchers (zip/download podem perdê-lo)
+chmod +x scripts/iniciar.sh "Iniciar Loja.command" 2>/dev/null || true
 ok "projeto em $PROJECT_DIR"
 
 # ---------- 4. Dependências ----------
@@ -247,6 +249,7 @@ info "Pasta do projeto:  $PROJECT_DIR"
 [ -n "$IP" ] && info "IP deste Mac:      $IP   (fixe no roteador / DHCP reservation)"
 echo
 info "Para subir o servidor:   ${B}cd \"$PROJECT_DIR\" && npm start${Z}"
+info "Ou: duplo-clique em ${B}Iniciar Loja.command${Z} dentro da pasta do projeto (Finder)."
 [ -n "$IP" ] && {
   info "Tablets (venda):   http://$IP:$PORT"
   info "Separação:         http://$IP:$PORT/separacao"

@@ -48,10 +48,16 @@ Quando terminar, ele mostra uma tela de **"Tudo pronto 🎉"** com o **IP do Mac
 
 (troque `SEU-IP` pelo número que apareceu).
 
-Para **subir a loja de novo** outro dia: abra o Terminal e rode:
-```
-cd ~/loja-naturaltech && npm start
-```
+Para **subir a loja de novo** outro dia, escolha um:
+- **Mais fácil:** abra a pasta `loja-naturaltech` no Finder e dê **duplo-clique** em
+  **`Iniciar Loja.command`**.
+- Ou pelo Terminal:
+  ```
+  cd ~/loja-naturaltech && npm start
+  ```
+
+> Os dois jeitos já escolhem sozinhos a versão certa do Node, então **não dá**
+> aquele erro de `better-sqlite3 / bindings file` mesmo num Mac com Node novo.
 
 ---
 

@@ -4,7 +4,8 @@
   "description": "PDV offline para a feira Natural Tech - TRUE. Servidor local + SQLite, acessado por tablets na rede local.",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
+    "start": "bash scripts/iniciar.sh",
+    "start:raw": "node server.js",
     "seed": "node src/seed.js",
     "seed:reset-estoque": "node src/seed.js --reset-estoque",
     "backup": "node scripts/backup.js"

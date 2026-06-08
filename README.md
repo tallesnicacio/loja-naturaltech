@@ -92,8 +92,13 @@ npm run seed:reset-estoque   # USAR SÓ no pré-evento: grava preço E estoque d
 ## Rodar (no dia)
 
 ```bash
-npm start
+npm start            # ou duplo-clique em "Iniciar Loja.command" (Finder)
 ```
+
+> `npm start` chama `scripts/iniciar.sh`, que escolhe sozinho um Node compatível
+> com o `better-sqlite3` (preferindo o `node@22`) e só recompila se precisar — por
+> isso **não** quebra com `Could not locate the bindings file` em Macs com Node 24/26.
+> Para rodar sem o wrapper (debug): `npm run start:raw`.
 
 A saída mostra a porta (padrão **3322**) e o IP de acesso. Para descobrir o IP do notebook:
 - macOS: `ipconfig getifaddr en0` (ou veja em Ajustes → Wi-Fi)
